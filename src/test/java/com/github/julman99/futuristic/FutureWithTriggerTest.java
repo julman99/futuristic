@@ -1,13 +1,15 @@
 package com.github.julman99.futuristic;
 
+import com.github.julman99.futuristic.util.DummyExceptions;
 import org.junit.Test;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @autor: julio
@@ -89,7 +91,7 @@ public class FutureWithTriggerTest {
         int test = 1;
         triggerValue(test, futureWithTrigger);
         int result = futureWithTrigger.mapFuture(i -> {
-            FutureWithTrigger<Integer> next = new FutureWithTrigger<Integer>();
+            FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             triggerValue(test + 1, next);
             return next;
         }).get();
@@ -104,7 +106,7 @@ public class FutureWithTriggerTest {
         int test = 1;
         triggerValueAsync(10, test, futureWithTrigger);
         int result = futureWithTrigger.mapFuture(i -> {
-            FutureWithTrigger<Integer> next = new FutureWithTrigger<Integer>();
+            FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             triggerValueAsync(10, test + 1, next);
             return next;
         }).get();
@@ -112,6 +114,120 @@ public class FutureWithTriggerTest {
         assertEquals(test + 1, result);
     }
 
+    @Test
+    public void testChaining() throws Exception {
+        FutureWithTrigger<Integer> futureWithTrigger = new FutureWithTrigger<>();
+
+        int initialValue = 1;
+        triggerValueAsync(10, initialValue, futureWithTrigger);
+        String result = futureWithTrigger.mapFuture(i -> {
+            //This will increase by one the test variable, after 10 milliseconds
+            //Result should be 2
+            FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
+            triggerValueAsync(10, initialValue + 1, next);
+            return next;
+        }).map(
+            //This will create a StringBuilder with the integer returned from the previous step
+            //Result should be "2"
+            i -> new StringBuilder(Integer.toString(i))
+        ).consume(
+            //This appends a "c" to the builder
+            //Result should be "2c"
+            s -> s.append("c")
+        ).get().toString();
+
+        //Proof that all was executed in sequence
+        assertEquals("2c", result);
+    }
+
+    @Test
+    public void testErrorCatching() {
+        FutureWithTrigger<Object> futureWithTrigger = new FutureWithTrigger<>();
+        RuntimeException exception = new RuntimeException();
+        AtomicReference<RuntimeException> exceptionReference = new AtomicReference<>();
+
+        triggerValue(new Object(), futureWithTrigger);
+
+        try {
+            futureWithTrigger.consume(v -> {
+                throw exception;
+            }).fail(RuntimeException.class, e -> {
+                exceptionReference.set(e);
+            }).get();
+
+            fail("Exception should have been thrown");
+        } catch (Exception catchedException) {
+            assertEquals(exception, exceptionReference.get());
+            assertEquals(exception, catchedException);
+        }
+    }
+
+    @Test
+    public void testErrorCatchingRightType() {
+        FutureWithTrigger<Object> futureWithTrigger = new FutureWithTrigger<>();
+        DummyExceptions.DummyException1 exception = new DummyExceptions.DummyException1();
+        AtomicReference<DummyExceptions.DummyException1> exceptionReference1 = new AtomicReference<>();
+        AtomicReference<DummyExceptions.DummyException2> exceptionReference2 = new AtomicReference<>();
+
+        Object test = new Object();
+        triggerValue(test, futureWithTrigger);
+
+        try {
+            futureWithTrigger.consume(v -> {
+                throw exception;
+            }).fail(DummyExceptions.DummyException2.class, e ->
+                    exceptionReference2.set(e)  //This should never be called
+            ).fail(DummyExceptions.DummyException1.class, e ->
+                    exceptionReference1.set(e) //This should be called because of the type
+            ).get();
+
+            fail("Exception should have been thrown");
+        } catch (Exception catchedException) {
+            assertEquals(exception, exceptionReference1.get());
+            assertNull(exceptionReference2.get());
+            assertEquals(exception, catchedException);
+        }
+    }
+
+    @Test
+    public void testErrorThrowingSync() {
+        FutureWithTrigger<Object> futureWithTrigger = new FutureWithTrigger<>();
+        RuntimeException exception = new RuntimeException();
+        AtomicReference<RuntimeException> exceptionReference = new AtomicReference<>();
+
+        triggerError(exception, futureWithTrigger);
+
+        try {
+            futureWithTrigger.fail(RuntimeException.class, e ->
+                exceptionReference.set(e)
+            ).get();
+
+            fail("Exception should have been thrown");
+        } catch (Exception catchedException) {
+            assertEquals(exception, exceptionReference.get());
+            assertEquals(exception, catchedException);
+        }
+    }
+
+    @Test
+    public void testErrorThrowingAsync() {
+        FutureWithTrigger<Object> futureWithTrigger = new FutureWithTrigger<>();
+        RuntimeException exception = new RuntimeException();
+        AtomicReference<RuntimeException> exceptionReference = new AtomicReference<>();
+
+        triggerErrorAsync(10, exception, futureWithTrigger);
+
+        try {
+            futureWithTrigger.fail(RuntimeException.class, e ->
+                exceptionReference.set(e)
+            ).get();
+
+            fail("Exception should have been thrown");
+        } catch (Exception catchedException) {
+            assertEquals(exception, exceptionReference.get());
+            assertEquals(exception, catchedException);
+        }
+    }
 
     private static <T> void triggerValue(T value, FutureWithTrigger<T> futureWithTrigger){
         futureWithTrigger.getTrigger().completed(value);
@@ -122,6 +238,19 @@ public class FutureWithTriggerTest {
             @Override
             public void run() {
                 futureWithTrigger.getTrigger().completed(value);
+            }
+        }, delay);
+    }
+
+    private static <T> void triggerError(Exception error, FutureWithTrigger<T> futureWithTrigger){
+        futureWithTrigger.getTrigger().failed(error);
+    }
+
+    private static <T> void triggerErrorAsync(long delay, Exception error, FutureWithTrigger<T> futureWithTrigger){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                futureWithTrigger.getTrigger().failed(error);
             }
         }, delay);
     }

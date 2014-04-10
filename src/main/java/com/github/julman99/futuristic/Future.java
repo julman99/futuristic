@@ -13,6 +13,6 @@ public interface Future<T> {
     public <R> Future<R> map(Function<T, R> mapper);
     public <R> Future<R> mapFuture(FutureFunction<T, R> mapper);
 
-    public <E extends Throwable> Future<T> fail(Class<E> throwableClass, Consumer<E> consumer);
+    public <E extends Exception> Future<T> fail(Class<E> throwableClass, Consumer<E> consumer);
 
 }
