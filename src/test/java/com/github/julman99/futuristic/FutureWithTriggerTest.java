@@ -149,7 +149,7 @@ public class FutureWithTriggerTest {
         try {
             futureWithTrigger.consume(v -> {
                 throw exception;
-            }).fail(RuntimeException.class, e -> {
+            }).trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
             }).get();
 
@@ -173,10 +173,10 @@ public class FutureWithTriggerTest {
         try {
             futureWithTrigger.consume(v -> {
                 throw exception;
-            }).fail(DummyExceptions.DummyException2.class, e ->
-                    exceptionReference2.set(e)  //This should never be called
-            ).fail(DummyExceptions.DummyException1.class, e ->
-                    exceptionReference1.set(e) //This should be called because of the type
+            }).trap(DummyExceptions.DummyException2.class, e ->
+                exceptionReference2.set(e)  //This should never be called
+            ).trap(DummyExceptions.DummyException1.class, e ->
+                exceptionReference1.set(e) //This should be called because of the type
             ).get();
 
             fail("Exception should have been thrown");
@@ -196,8 +196,8 @@ public class FutureWithTriggerTest {
         Triggerer.triggerError(exception, futureWithTrigger);
 
         try {
-            futureWithTrigger.fail(RuntimeException.class, e ->
-                exceptionReference.set(e)
+            futureWithTrigger.trap(RuntimeException.class, e ->
+                    exceptionReference.set(e)
             ).get();
 
             fail("Exception should have been thrown");
@@ -216,8 +216,8 @@ public class FutureWithTriggerTest {
         Triggerer.triggerErrorAsync(10, exception, futureWithTrigger);
 
         try {
-            futureWithTrigger.fail(RuntimeException.class, e ->
-                exceptionReference.set(e)
+            futureWithTrigger.trap(RuntimeException.class, e ->
+                    exceptionReference.set(e)
             ).get();
 
             fail("Exception should have been thrown");

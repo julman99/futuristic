@@ -115,7 +115,7 @@ public class FutureWithTrigger<T> implements Future<T> {
     }
 
     @Override
-    public <E extends Exception> Future<T> fail(Class<E> throwableClass, Consumer<E> consumer) {
+    public <E extends Exception> Future<T> trap(Class<E> throwableClass, Consumer<E> consumer) {
         FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
         this.callbackLink.setCallbackTo(new Callback<T>() {
             @Override
