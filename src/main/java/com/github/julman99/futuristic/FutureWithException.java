@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * @autor: julio
  */
-public class FutureWithException<T> implements Future<T> {
+class FutureWithException<T> implements Future<T> {
 
     private final Exception exception;
 
