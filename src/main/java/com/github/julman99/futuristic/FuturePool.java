@@ -35,11 +35,11 @@ public class FuturePool<T> {
     }
 
     public Future<Integer> all() {
-        return allFinishedFuture;
+        return allFinishedFuture.getFuture();
     }
 
     public Future<T> any() {
-        return anyFinishedFuture;
+        return anyFinishedFuture.getFuture();
     }
 
     private void registerCompleted(Future<T> future, T result, Exception error) {
