@@ -21,7 +21,7 @@ public class FutureWithTriggerTest {
         Object test = new Object();
         Triggerer.triggerValue(test, futureWithTrigger);
 
-        Object result = futureWithTrigger.get();
+        Object result = futureWithTrigger.getFuture().get();
         assertEquals(test, result);
     }
 
@@ -32,14 +32,14 @@ public class FutureWithTriggerTest {
         Object test = new Object();
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
 
-        Object result = futureWithTrigger.get();
+        Object result = futureWithTrigger.getFuture().get();
         assertEquals(test, result);
     }
 
     @Test
     public void testConsumeSync(){
         FutureWithTrigger<AtomicBoolean> futureWithTrigger = new FutureWithTrigger<>();
-        futureWithTrigger.consume(b->b.set(true));
+        futureWithTrigger.getFuture().consume(b->b.set(true));
 
         AtomicBoolean test = new AtomicBoolean(false);
         Triggerer.triggerValue(test, futureWithTrigger);
@@ -50,11 +50,11 @@ public class FutureWithTriggerTest {
     @Test
     public void testConsumeAsync() throws Exception {
         FutureWithTrigger<AtomicBoolean> futureWithTrigger = new FutureWithTrigger<>();
-        futureWithTrigger.consume(b->b.set(true));
+        futureWithTrigger.getFuture().consume(b->b.set(true));
 
         AtomicBoolean test = new AtomicBoolean(false);
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
-        AtomicBoolean result = futureWithTrigger.consume(b->b.set(true)).get();
+        AtomicBoolean result = futureWithTrigger.getFuture().consume(b->b.set(true)).get();
 
         assertEquals(test, result);
         assertTrue(test.get());
@@ -66,7 +66,7 @@ public class FutureWithTriggerTest {
 
         int test = 1;
         Triggerer.triggerValue(test, futureWithTrigger);
-        int result = futureWithTrigger.map(i->i+1).get();
+        int result = futureWithTrigger.getFuture().map(i->i+1).get();
 
         assertEquals(test + 1, result);
     }
@@ -77,7 +77,7 @@ public class FutureWithTriggerTest {
 
         int test = 1;
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
-        int result = futureWithTrigger.map(i->i+1).get();
+        int result = futureWithTrigger.getFuture().map(i->i+1).get();
 
         assertEquals(test + 1, result);
     }
@@ -88,10 +88,10 @@ public class FutureWithTriggerTest {
 
         int test = 1;
         Triggerer.triggerValue(test, futureWithTrigger);
-        int result = futureWithTrigger.mapFuture(i -> {
+        int result = futureWithTrigger.getFuture().mapFuture(i -> {
             FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             Triggerer.triggerValue(test + 1, next);
-            return next;
+            return next.getFuture();
         }).get();
 
         assertEquals(test + 1, result);
@@ -103,10 +103,10 @@ public class FutureWithTriggerTest {
 
         int test = 1;
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
-        int result = futureWithTrigger.mapFuture(i -> {
+        int result = futureWithTrigger.getFuture().mapFuture(i -> {
             FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             Triggerer.triggerValueAsync(10, test + 1, next);
-            return next;
+            return next.getFuture();
         }).get();
 
         assertEquals(test + 1, result);
@@ -118,12 +118,12 @@ public class FutureWithTriggerTest {
 
         int initialValue = 1;
         Triggerer.triggerValueAsync(10, initialValue, futureWithTrigger);
-        String result = futureWithTrigger.mapFuture(i -> {
+        String result = futureWithTrigger.getFuture().mapFuture(i -> {
             //This will increase by one the test variable, after 10 milliseconds
             //Result should be 2
             FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             Triggerer.triggerValueAsync(10, initialValue + 1, next);
-            return next;
+            return next.getFuture();
         }).map(
             //This will create a StringBuilder with the integer returned from the previous step
             //Result should be "2"
@@ -147,7 +147,7 @@ public class FutureWithTriggerTest {
         Triggerer.triggerValue(new Object(), futureWithTrigger);
 
         try {
-            futureWithTrigger.consume(v -> {
+            futureWithTrigger.getFuture().consume(v -> {
                 throw exception;
             }).trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
@@ -171,7 +171,7 @@ public class FutureWithTriggerTest {
         Triggerer.triggerValue(test, futureWithTrigger);
 
         try {
-            futureWithTrigger.consume(v -> {
+            futureWithTrigger.getFuture().consume(v -> {
                 throw exception;
             }).trap(DummyExceptions.DummyException2.class, e ->
                 exceptionReference2.set(e)  //This should never be called
@@ -196,7 +196,7 @@ public class FutureWithTriggerTest {
         Triggerer.triggerError(exception, futureWithTrigger);
 
         try {
-            futureWithTrigger.trap(RuntimeException.class, e ->
+            futureWithTrigger.getFuture().trap(RuntimeException.class, e ->
                     exceptionReference.set(e)
             ).get();
 
@@ -216,7 +216,7 @@ public class FutureWithTriggerTest {
         Triggerer.triggerErrorAsync(10, exception, futureWithTrigger);
 
         try {
-            futureWithTrigger.trap(RuntimeException.class, e ->
+            futureWithTrigger.getFuture().trap(RuntimeException.class, e ->
                     exceptionReference.set(e)
             ).get();
 

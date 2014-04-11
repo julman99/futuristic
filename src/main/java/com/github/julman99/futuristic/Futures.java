@@ -11,6 +11,10 @@ public class Futures {
 
     private static final Executor EXECUTOR = Executors.newCachedThreadPool();
 
+    public static <T> FutureWithTrigger<T> withTrigger(){
+        return new FutureWithTrigger<T>();
+    };
+
     public static <T> Future<T> withValue(T value){
         return new FutureWithValue<>(value);
     }
@@ -33,6 +37,6 @@ public class Futures {
                 futureWithTrigger.getTrigger().failed(ex);
             }
         });
-        return futureWithTrigger;
+        return futureWithTrigger.getFuture();
     }
 }
