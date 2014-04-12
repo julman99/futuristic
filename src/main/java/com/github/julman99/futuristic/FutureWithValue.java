@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * @autor: julio
  */
-class FutureWithValue<T> implements Future<T> {
+final class FutureWithValue<T> implements Future<T> {
 
     private final T value;
 

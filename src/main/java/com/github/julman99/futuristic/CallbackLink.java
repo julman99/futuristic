@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @autor: julio
  */
-public class CallbackLink<T> {
+public final class CallbackLink<T> {
 
     private final AtomicBoolean done = new AtomicBoolean(false);
     private final AtomicBoolean forwarded = new AtomicBoolean(false);

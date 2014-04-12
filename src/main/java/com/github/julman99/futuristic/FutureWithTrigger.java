@@ -20,11 +20,11 @@ public final class FutureWithTrigger<T> {
         this.future = createFuture();
     }
 
-    public final Callback<T> getTrigger(){
+    public Callback<T> getTrigger(){
         return this.triggerCallback;
     }
 
-    public final Future<T> getFuture(){
+    public Future<T> getFuture(){
         return this.future;
     }
 
