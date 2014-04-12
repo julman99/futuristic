@@ -3,6 +3,7 @@ package com.github.julman99.futuristic;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * @autor: julio
@@ -17,6 +18,12 @@ public final class Futures {
 
     public static <T> FutureWithTrigger<T> withTrigger(){
         return new FutureWithTrigger<T>();
+    };
+
+    public static <T> Future<T> withCallback(Consumer<Callback<T>> consumer){
+        FutureWithTrigger<T> futureWithTrigger = new FutureWithTrigger<>();
+        consumer.accept(futureWithTrigger.getTrigger());
+        return futureWithTrigger.getFuture();
     };
 
     public static <T> Future<T> withValue(T value){
