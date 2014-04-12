@@ -7,9 +7,13 @@ import java.util.concurrent.Executors;
 /**
  * @autor: julio
  */
-public class Futures {
+public final class Futures {
 
     private static final Executor EXECUTOR = Executors.newCachedThreadPool();
+
+    private Futures(){
+
+    }
 
     public static <T> FutureWithTrigger<T> withTrigger(){
         return new FutureWithTrigger<T>();
