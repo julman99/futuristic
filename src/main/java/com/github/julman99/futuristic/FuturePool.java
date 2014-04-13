@@ -16,48 +16,56 @@ public class FuturePool<T> {
     private final Set<Future<T>> completedFutures = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     //Futures that will get triggered once any or all listened futures are finished
-    private final FutureWithTrigger<Integer> allFinishedFuture = new FutureWithTrigger<>();
-    private final FutureWithTrigger<T> anyFinishedFuture = new FutureWithTrigger<>();
+    private final FutureWithTrigger<Set<T>> allFinishedFuture = new FutureWithTrigger<>();
+    private final FutureWithTrigger<T> firstFinishedFuture = new FutureWithTrigger<>();
 
     //Atomic structures to detect wether the first of the last Future is the one finishing
     private final AtomicInteger successCompletedCount = new AtomicInteger(0);
     private final AtomicBoolean isLastCompleted = new AtomicBoolean(true);
 
+    //Structure to store the results
+    private final Set<T> results = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
 
     public Future<T> listen(Future<T> future){
         listenedFutures.add(future);
         return
-            future.consume(v -> {
-                registerCompleted(future, v, null);
-            }).trap(Exception.class, e -> {
-                registerCompleted(future, null, e);
-            });
+            future.consume(v ->
+                registerCompleted(future, v, null)
+            ).trap(Exception.class, e ->
+                registerCompleted(future, null, e)
+            );
     }
 
-    public Future<Integer> all() {
+    public Future<Set<T>> all() {
         return allFinishedFuture.getFuture();
     }
 
-    public Future<T> any() {
-        return anyFinishedFuture.getFuture();
+    public Future<T> first() {
+        return firstFinishedFuture.getFuture();
     }
 
     private void registerCompleted(Future<T> future, T result, Exception error) {
         int currentSuccessCompletedCount = successCompletedCount.incrementAndGet();
 
+        //Save the result if the future completed successfully
+        if(error == null && result != null){
+            results.add(result);
+        }
+
         //First finished?
         if(currentSuccessCompletedCount == 1) {
             if(error == null){
-                anyFinishedFuture.getTrigger().completed(result);
+                firstFinishedFuture.getTrigger().completed(result);
             } else {
-                anyFinishedFuture.getTrigger().failed(error);
+                firstFinishedFuture.getTrigger().failed(error);
             }
         }
 
         //All finished?
         completedFutures.add(future);
         if(completedFutures.equals(listenedFutures) && this.isLastCompleted.getAndSet(false)) {
-            this.allFinishedFuture.getTrigger().completed(currentSuccessCompletedCount);
+            this.allFinishedFuture.getTrigger().completed(results);
         }
     }
 
