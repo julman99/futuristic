@@ -35,10 +35,16 @@ final class FutureWithException<T> implements Future<T> {
     }
 
     @Override
-    public <E extends Exception> Future<T> trap(Class<E> throwableClass, Consumer<E> consumer) {
+    public <E extends Exception> Future<T> trap(Class<E> throwableClass, ExceptionTrapper<E, T> trapper) {
         if(throwableClass.isAssignableFrom(exception.getClass())){
-            consumer.accept((E) exception);
+            try {
+                T trapped = trapper.trap((E) exception);
+                return new FutureWithValue<>(trapped);
+            } catch (Exception ex){
+                return new FutureWithException<>(ex);
+            }
         }
         return this;
     }
+
 }

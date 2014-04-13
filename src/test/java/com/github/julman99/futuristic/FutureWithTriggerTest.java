@@ -151,6 +151,7 @@ public class FutureWithTriggerTest {
                 throw exception;
             }).trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
+                throw e;
             }).get();
 
             fail("Exception should have been thrown");
@@ -173,11 +174,13 @@ public class FutureWithTriggerTest {
         try {
             futureWithTrigger.getFuture().consume(v -> {
                 throw exception;
-            }).trap(DummyExceptions.DummyException2.class, e ->
-                exceptionReference2.set(e)  //This should never be called
-            ).trap(DummyExceptions.DummyException1.class, e ->
-                exceptionReference1.set(e) //This should be called because of the type
-            ).get();
+            }).trap(DummyExceptions.DummyException2.class, e -> {
+                exceptionReference2.set(e);  //This should never be called
+                throw e;
+            }).trap(DummyExceptions.DummyException1.class, e -> {
+                exceptionReference1.set(e); //This should be called because of the type
+                throw e;
+            }).get();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -196,9 +199,10 @@ public class FutureWithTriggerTest {
         Triggerer.triggerError(exception, futureWithTrigger);
 
         try {
-            futureWithTrigger.getFuture().trap(RuntimeException.class, e ->
-                    exceptionReference.set(e)
-            ).get();
+            futureWithTrigger.getFuture().trap(RuntimeException.class, e -> {
+                exceptionReference.set(e);
+                throw e;
+            }).get();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -216,14 +220,36 @@ public class FutureWithTriggerTest {
         Triggerer.triggerErrorAsync(10, exception, futureWithTrigger);
 
         try {
-            futureWithTrigger.getFuture().trap(RuntimeException.class, e ->
-                    exceptionReference.set(e)
-            ).get();
+            futureWithTrigger.getFuture().trap(RuntimeException.class, e -> {
+                exceptionReference.set(e);
+                throw e;
+            }).get();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
             assertEquals(exception, exceptionReference.get());
             assertEquals(exception, catchedException);
+        }
+    }
+
+    @Test
+    public void testErrorRecovering() {
+        FutureWithTrigger<Integer> futureWithTrigger = new FutureWithTrigger<>();
+        RuntimeException exception = new RuntimeException();
+        AtomicReference<RuntimeException> exceptionReference = new AtomicReference<>();
+
+        Triggerer.triggerErrorAsync(10, exception, futureWithTrigger);
+
+        try {
+            int value = futureWithTrigger.getFuture().trap(RuntimeException.class, e -> {
+                exceptionReference.set(e);
+                return 1;
+            }).get();
+
+            assertEquals(1, value);
+            assertEquals(exception, exceptionReference.get());
+        } catch (Exception catchedException) {
+            fail("No error should have been thrown");
         }
     }
 

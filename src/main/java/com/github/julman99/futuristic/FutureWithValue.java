@@ -50,7 +50,7 @@ final class FutureWithValue<T> implements Future<T> {
     }
 
     @Override
-    public <E extends Exception> Future<T> trap(Class<E> throwableClass, Consumer<E> consumer) {
+    public <E extends Exception> Future<T> trap(Class<E> throwableClass, ExceptionTrapper<E, T> trapper) {
         return this;
     }
 

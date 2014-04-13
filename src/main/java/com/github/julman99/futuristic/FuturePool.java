@@ -32,9 +32,10 @@ public class FuturePool<T> {
         return
             future.consume(v ->
                 registerCompleted(future, v, null)
-            ).trap(Exception.class, e ->
-                registerCompleted(future, null, e)
-            );
+            ).trap(Exception.class, e -> {
+                registerCompleted(future, null, e);
+                throw e;
+            });
     }
 
     public Future<Set<T>> all() {
