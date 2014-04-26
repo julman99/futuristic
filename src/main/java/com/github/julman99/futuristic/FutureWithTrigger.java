@@ -67,8 +67,8 @@ public final class FutureWithTrigger<T> {
                             consumer.accept(result);
                         } catch (Exception e) {
                             this.failed(e);
+                            return;
                         }
-
                         nextFuture.getTrigger().completed(result);
                     }
 
@@ -139,6 +139,8 @@ public final class FutureWithTrigger<T> {
                             } catch (Exception ex){
                                 nextFuture.getTrigger().failed(throwable);
                             }
+                        } else {
+                            nextFuture.getTrigger().failed(throwable);
                         }
 
                     }
