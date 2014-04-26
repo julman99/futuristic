@@ -57,11 +57,23 @@ public interface Future<T> {
 
     /**
      * Called when there is an {@link java.lang.Exception}. The trapper will only be called if the Exception of
-     * the type specified as the first parameter of the class
+     * the type specified as the first parameter of the class. The trapper should return a value to recover from the
+     * {@link java.lang.Exception} or should rethrow the exception
      * @param exceptionClass The class of the Exception to trap
      * @param trapper
      * @param <E>
      * @return
      */
     public <E extends Exception> Future<T> trap(Class<E> exceptionClass, ExceptionTrapper<E, T> trapper);
+
+    /**
+     * Called when there is an {@link java.lang.Exception}. The trapper will only be called if the Exception of
+     * the type specified as the first parameter of the class. The trapper should return a future value to recover from
+     * the {@link java.lang.Exception} or should rethrow the exception
+     * @param exceptionClass The class of the Exception to trap
+     * @param trapper
+     * @param <E>
+     * @return
+     */
+    public <E extends Exception> Future<T> trapFuture(Class<E> exceptionClass, ExceptionTrapper<E, Future<T>> trapper);
 }

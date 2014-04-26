@@ -145,6 +145,31 @@ public final class FutureWithTrigger<T> {
                 });
                 return nextFuture.getFuture();
             }
+
+            @Override
+            public <E extends Exception> Future<T> trapFuture(Class<E> exceptionClass, ExceptionTrapper<E, Future<T>> trapper) {
+                FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
+                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
+                    @Override
+                    public void completed(T result) {
+
+                    }
+
+                    @Override
+                    public void failed(Exception throwable) {
+                        if(exceptionClass.isAssignableFrom(throwable.getClass())){
+                            try {
+                                Future<T> res = trapper.trap((E) throwable);
+                                res.consume(nextFuture.getTrigger());
+                            } catch (Exception ex){
+                                nextFuture.getTrigger().failed(throwable);
+                            }
+                        }
+
+                    }
+                });
+                return nextFuture.getFuture();
+            }
         };
     }
 
