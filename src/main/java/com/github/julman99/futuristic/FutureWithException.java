@@ -30,7 +30,7 @@ final class FutureWithException<T> implements Future<T> {
     }
 
     @Override
-    public <R> Future<R> mapFuture(FutureFunction<T, R> mapper) {
+    public <R> Future<R> mapFuture(Function<T, Future<R>> mapper) {
         return new FutureWithException<>(exception);
     }
 

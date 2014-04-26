@@ -53,7 +53,7 @@ public interface Future<T> {
      * @param <R>
      * @return
      */
-    public <R> Future<R> mapFuture(FutureFunction<T, R> mapper);
+    public <R> Future<R> mapFuture(Function<T, Future<R>> mapper);
 
     /**
      * Called when there is an {@link java.lang.Exception}. The trapper will only be called if the Exception of

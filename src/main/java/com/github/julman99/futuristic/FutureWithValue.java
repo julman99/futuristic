@@ -40,7 +40,7 @@ final class FutureWithValue<T> implements Future<T> {
     }
 
     @Override
-    public <R> Future<R> mapFuture(FutureFunction<T, R> mapper) {
+    public <R> Future<R> mapFuture(Function<T, Future<R>> mapper) {
         try {
             Future<R> mapped = mapper.apply(value);
             return mapped;

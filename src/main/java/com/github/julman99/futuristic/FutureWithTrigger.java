@@ -82,29 +82,11 @@ public final class FutureWithTrigger<T> {
 
             @Override
             public <R> Future<R> map(Function<T, R> mapper) {
-                FutureWithTrigger<R> nextFuture = new FutureWithTrigger<>();
-                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
-                    @Override
-                    public void completed(T result) {
-                        try {
-                            R mapped = mapper.apply(result);
-                            nextFuture.getTrigger().completed(mapped);
-                        } catch (Exception e) {
-                            this.failed(e);
-                        }
-
-                    }
-
-                    @Override
-                    public void failed(Exception throwable) {
-                        nextFuture.getTrigger().failed(throwable);
-                    }
-                });
-                return nextFuture.getFuture();
+                return mapFuture(t -> new FutureWithValue<R>(mapper.apply(t)));
             }
 
             @Override
-            public <R> Future<R> mapFuture(FutureFunction<T, R> mapper) {
+            public <R> Future<R> mapFuture(Function<T, Future<R>> mapper) {
                 FutureWithTrigger<R> nextFuture = new FutureWithTrigger<>();
                 FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
                     @Override
@@ -123,29 +105,7 @@ public final class FutureWithTrigger<T> {
 
             @Override
             public <E extends Exception> Future<T> trap(Class<E> exceptionClass, ExceptionTrapper<E, T> trapper) {
-                FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
-                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
-                    @Override
-                    public void completed(T result) {
-
-                    }
-
-                    @Override
-                    public void failed(Exception throwable) {
-                        if(exceptionClass.isAssignableFrom(throwable.getClass())){
-                            try {
-                                T res = trapper.trap((E) throwable);
-                                nextFuture.getTrigger().completed(res);
-                            } catch (Exception ex){
-                                nextFuture.getTrigger().failed(throwable);
-                            }
-                        } else {
-                            nextFuture.getTrigger().failed(throwable);
-                        }
-
-                    }
-                });
-                return nextFuture.getFuture();
+                return trapFuture(exceptionClass, e -> new FutureWithValue<>(trapper.trap(e)));
             }
 
             @Override
@@ -166,6 +126,8 @@ public final class FutureWithTrigger<T> {
                             } catch (Exception ex){
                                 nextFuture.getTrigger().failed(throwable);
                             }
+                        } else {
+                            nextFuture.getTrigger().failed(throwable);
                         }
 
                     }
