@@ -6,6 +6,8 @@ The best way to do Future programming on Java 1.8
 
 All of the features can be accessed by the ```Futures``` class.
 
+(Documentation to be improved soon)
+
 ## Usage
 
 ### Maven
