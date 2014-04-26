@@ -110,7 +110,7 @@ public final class FutureWithTrigger<T> {
                     @Override
                     public void completed(T result) {
                         Future<R> mapped = mapper.apply(result);
-                        mapped.consume(r -> nextFuture.getTrigger().completed(r));
+                        mapped.consume(nextFuture.getTrigger());
                     }
 
                     @Override

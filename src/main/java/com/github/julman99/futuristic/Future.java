@@ -23,6 +23,20 @@ public interface Future<T> {
     public Future<T> consume(Consumer<T> consumer);
 
     /**
+     * Called when the future value is available.
+     * @param callback
+     * @return
+     */
+    default void consume(Callback<T> callback){
+        this
+            .consume(r -> callback.completed(r))
+            .trap(Exception.class, e -> {
+                callback.failed(e);
+                throw e;
+            });
+    }
+
+    /**
      * Called when the future value is available. The mapper should map the result of the future to a different
      * object
      * @param mapper
@@ -50,5 +64,4 @@ public interface Future<T> {
      * @return
      */
     public <E extends Exception> Future<T> trap(Class<E> exceptionClass, ExceptionTrapper<E, T> trapper);
-
 }
