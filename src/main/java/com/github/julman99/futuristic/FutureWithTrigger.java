@@ -122,7 +122,7 @@ public final class FutureWithTrigger<T> {
             }
 
             @Override
-            public <E extends Exception> Future<T> trap(Class<E> throwableClass, ExceptionTrapper<E, T> trapper) {
+            public <E extends Exception> Future<T> trap(Class<E> exceptionClass, ExceptionTrapper<E, T> trapper) {
                 FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
                 FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
                     @Override
@@ -132,7 +132,7 @@ public final class FutureWithTrigger<T> {
 
                     @Override
                     public void failed(Exception throwable) {
-                        if(throwableClass.isAssignableFrom(throwable.getClass())){
+                        if(exceptionClass.isAssignableFrom(throwable.getClass())){
                             try {
                                 T res = trapper.trap((E) throwable);
                                 nextFuture.getTrigger().completed(res);
