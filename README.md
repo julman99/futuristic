@@ -115,6 +115,28 @@ public Future<String> getNameAndAgeFormatted(){
 Futuristic is designed so your code can throw exceptions at any point during any of the Future handler methods. 
 The Exceptions will be correctly catched and they will be bubbled up to the ```trap``` handlers (if any).
 
+### Synchronizing futures
+
+Sometimes you have multiple Futures and you want to wait for any or all. A class called FuturePool is provided 
+specifically for this.
+
+```java
+FuturePool<Integer> pool = new FuturePool<>();
+
+//Then you can call .listen() as many times as you want. Its only argument 
+//is a Future object that you want to listen on
+pool.listen(
+    Futures.withValue(1)
+);
+
+//After the pool has been given all the listens, you have two options:
+
+Future<Integer> anyFuture = pool.any(); //Will return the result of the first Future to respond
+//or
+Future<Set<Integer>> allFuture = pool.all(); //Will return a Set with the result of all the Futures
+
+```
+
 ## Creating futures
 
 All type of Futures can be created by the ```Futures``` class.
