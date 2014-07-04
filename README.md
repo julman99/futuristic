@@ -189,10 +189,10 @@ Add to your ```pom.xml```
     <dependency>
         <groupId>com.github.julman99</groupId>
         <artifactId>futuristic</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1</version>
     </dependency>
 </dependencies>
 ```
 ### Jar
 
-Download from [here](https://github.com/julman99/mvn-repo/raw/master/com/github/julman99/futuristic/0.1.0/futuristic-0.1.0.jar)
+Download from [here](https://github.com/julman99/mvn-repo/raw/master/com/github/julman99/futuristic/0.1.1/futuristic-0.1.1.jar)
