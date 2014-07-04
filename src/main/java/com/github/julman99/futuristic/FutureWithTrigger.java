@@ -16,7 +16,7 @@ public final class FutureWithTrigger<T> {
 
     public FutureWithTrigger() {
         this.callbackLink = new CallbackLink<>();
-        this.triggerCallback = this.callbackLink.getCallbackFrom();
+        this.triggerCallback = this.callbackLink.getFrom();
         this.future = createFuture();
     }
 
@@ -35,7 +35,7 @@ public final class FutureWithTrigger<T> {
                 final CountDownLatch latch = new CountDownLatch(1);
                 final AtomicReference<T> resultReference = new AtomicReference<>();
                 final AtomicReference<Exception> errorReference = new AtomicReference<>();
-                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
+                FutureWithTrigger.this.callbackLink.addTo(new Callback<T>() {
                     @Override
                     public void completed(T result) {
                         resultReference.set(result);
@@ -60,7 +60,7 @@ public final class FutureWithTrigger<T> {
             @Override
             public Future<T> consume(Consumer<T> consumer) {
                 FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
-                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
+                FutureWithTrigger.this.callbackLink.addTo(new Callback<T>() {
                     @Override
                     public void completed(T result) {
                         try {
@@ -88,7 +88,7 @@ public final class FutureWithTrigger<T> {
             @Override
             public <R> Future<R> mapFuture(Function<T, Future<R>> mapper) {
                 FutureWithTrigger<R> nextFuture = new FutureWithTrigger<>();
-                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
+                FutureWithTrigger.this.callbackLink.addTo(new Callback<T>() {
                     @Override
                     public void completed(T result) {
                         Future<R> mapped = mapper.apply(result);
@@ -111,7 +111,7 @@ public final class FutureWithTrigger<T> {
             @Override
             public <E extends Exception> Future<T> trapFuture(Class<E> exceptionClass, ExceptionTrapper<E, Future<T>> trapper) {
                 FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
-                FutureWithTrigger.this.callbackLink.setCallbackTo(new Callback<T>() {
+                FutureWithTrigger.this.callbackLink.addTo(new Callback<T>() {
                     @Override
                     public void completed(T result) {
 
@@ -119,11 +119,11 @@ public final class FutureWithTrigger<T> {
 
                     @Override
                     public void failed(Exception throwable) {
-                        if(exceptionClass.isAssignableFrom(throwable.getClass())){
+                        if (exceptionClass.isAssignableFrom(throwable.getClass())) {
                             try {
                                 Future<T> res = trapper.trap((E) throwable);
                                 res.consume(nextFuture.getTrigger());
-                            } catch (Exception ex){
+                            } catch (Exception ex) {
                                 nextFuture.getTrigger().failed(throwable);
                             }
                         } else {

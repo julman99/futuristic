@@ -1,5 +1,7 @@
 package com.github.julman99.futuristic;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -13,12 +15,12 @@ public final class CallbackLink<T> {
     private T result = null;
     private Exception error = null;
 
-    private Callback<T> callbackTo;
+    private Queue<Callback<T>> callbacksTo = new ConcurrentLinkedQueue<>();
 
     public CallbackLink() {
     }
 
-    public Callback<T> getCallbackFrom(){
+    public Callback<T> getFrom(){
         return new Callback<T>() {
             @Override
             public void completed(T result) {
@@ -36,18 +38,26 @@ public final class CallbackLink<T> {
         };
     }
 
-    public void setCallbackTo(Callback<T> callbackTo){
-        this.callbackTo = callbackTo;
+    public void addTo(Callback<T> callbackTo){
+        this.callbacksTo.add(callbackTo);
         forward();
     }
 
     private void forward(){
-        if(done.get() && callbackTo != null && !forwarded.getAndSet(true) ){
-            if(error == null){
-                callbackTo.completed(result);
-            } else {
-                callbackTo.failed(error);
+        if(done.get()){
+            while(true) {
+                Callback<T> next = callbacksTo.poll();
+                if(next == null){
+                    break;
+                } else {
+                    if(error == null){
+                        next.completed(result);
+                    } else {
+                        next.failed(error);
+                    }
+                }
             }
+
         }
     }
 }
