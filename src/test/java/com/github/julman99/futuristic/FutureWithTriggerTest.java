@@ -162,6 +162,29 @@ public class FutureWithTriggerTest {
     }
 
     @Test
+    public void testErrorCatchingFuture() {
+        FutureWithTrigger<Object> futureWithTrigger = new FutureWithTrigger<>();
+        RuntimeException exception = new RuntimeException();
+        AtomicReference<RuntimeException> exceptionReference = new AtomicReference<>();
+
+        Triggerer.triggerValue(new Object(), futureWithTrigger);
+
+        try {
+            futureWithTrigger.getFuture().consume(v -> {
+                throw exception;
+            }).trapFuture(RuntimeException.class, e -> {
+                exceptionReference.set(e);
+                throw e;
+            }).get();
+
+            fail("Exception should have been thrown");
+        } catch (Exception catchedException) {
+            assertEquals(exception, exceptionReference.get());
+            assertEquals(exception, catchedException);
+        }
+    }
+
+    @Test
     public void testErrorCatchingRightType() {
         FutureWithTrigger<Object> futureWithTrigger = new FutureWithTrigger<>();
         DummyExceptions.DummyException1 exception = new DummyExceptions.DummyException1();
@@ -253,5 +276,25 @@ public class FutureWithTriggerTest {
         }
     }
 
+    @Test
+    public void testErrorRecoveringFuture() {
+        FutureWithTrigger<Integer> futureWithTrigger = new FutureWithTrigger<>();
+        RuntimeException exception = new RuntimeException();
+        AtomicReference<RuntimeException> exceptionReference = new AtomicReference<>();
+
+        Triggerer.triggerErrorAsync(10, exception, futureWithTrigger);
+
+        try {
+            int value = futureWithTrigger.getFuture().trapFuture(RuntimeException.class, e -> {
+                exceptionReference.set(e);
+                return Futures.withValue(1);
+            }).get();
+
+            assertEquals(1, value);
+            assertEquals(exception, exceptionReference.get());
+        } catch (Exception catchedException) {
+            fail("No error should have been thrown");
+        }
+    }
 
 }
