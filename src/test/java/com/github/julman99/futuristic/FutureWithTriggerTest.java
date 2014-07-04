@@ -83,7 +83,7 @@ public class FutureWithTriggerTest {
     }
 
     @Test
-    public void testMapfSync() throws Exception {
+    public void testMapFutureSync() throws Exception {
         FutureWithTrigger<Integer> futureWithTrigger = new FutureWithTrigger<>();
 
         int test = 1;
@@ -98,7 +98,7 @@ public class FutureWithTriggerTest {
     }
 
     @Test
-    public void testMapfAsync() throws Exception {
+    public void testMapFutureAsync() throws Exception {
         FutureWithTrigger<Integer> futureWithTrigger = new FutureWithTrigger<>();
 
         int test = 1;
