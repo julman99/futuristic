@@ -36,7 +36,8 @@ someFuture.consume(result -> {
 Allows you to chain different callbacks to transform the result of a future. For example, image a method that must
 return the concatenated name and the age of a User. Now imagine the User must be retreived asynchronously from a server.
  
-With the ```map``` method, you can transform a result of a future after it is available. 
+With the ```map``` method, you can transform a Future\<User\> to a Future\<String\> using very little code and without doing
+any callback-based programming.
 
 Look at the following example:
 
@@ -76,8 +77,8 @@ public Future<String> getNameAndAgeFormatted(){
 ```
 
 As you can see, using the ```map``` feature is much simpler, there is less code involved, it is easier to read and
-most importantly, the code will not compile if a formatted string is not returned. Without the ```map``` aproach, you
-can still not call the ```futureWithTrigger``` allowing you to create code that will compile, but will not work. 
+most importantly, the code will not compile if a formatted string is not returned. Without the ```map``` approach, you
+can still not call the ```futureWithTrigger``` and it will compile. 
 
 ### Handling Exceptions
 
@@ -102,9 +103,7 @@ public Future<String> getNameAndAgeFormatted(){
                                            //InvalidUserException. Since this function is returning a String, it is
                                            //effectively recovering from the Exception
     }).trap(Exception.class, e -> {
-        return "Unkown error ocurred";     //Futuristic will only call this lambda if the Exception is of type
-                                           //InvalidUserException. This function is also returning a String, so it is
-                                           //recovering from the exception
+        return "Unkown error ocurred";     //Futuristic will call this lambda for the rest of the Exceptions. 
     });
 }
 
@@ -112,12 +111,12 @@ public Future<String> getNameAndAgeFormatted(){
 
 ### More about Exceptions
 
-Futuristic is designed so your code can Throw exceptions at any point during any of any Future methods. The Exceptions
-will be correctly catched and they will be bubbled up to the ```trap``` handlers (if any).
+Futuristic is designed so your code can throw exceptions at any point during any of the Future handler methods. 
+The Exceptions will be correctly catched and they will be bubbled up to the ```trap``` handlers (if any).
 
 ## Creating futures
 
-All of the features can be accessed by the ```Futures``` class.
+All type of Futures can be created by the ```Futures``` class.
 
 ### With Callable
 
@@ -149,7 +148,7 @@ in the same thread as it was created.
 Sometimes you need to return an Exception wrapped inside a future. In these cases you can do:
 
 ```java
-Future future = Futures.withException(new RuntimeException("Some exception);
+Future future = Futures.withException(new RuntimeException("Some exception");
 ```
 
 This will create a future that is inmedialty triggered and will produce the Exception. This kind of future triggers 
@@ -163,12 +162,12 @@ You can then trigger it from any part-thread of your code to deliver the result 
 ```java
 FutureWithTrigger<AnyClass> future = Futures.withTrigger();
 
-//the future object contains two methods
+//in one part of your code you can get the trigger 
 future.getTrigger().completed(new AnyClass(); //this is used to trigger the Future. This can be triggered from 
                                               //any thread, or usually inside a callback that you are converting
                                               //to Future-based code
                                               
-//the actual future object can be retreived by
+//in another part of your code you can get the corresponding future 
 future.getFuture();                           //This is a regular Future, that will get triggered by the trigger
                                               //explained above
 
