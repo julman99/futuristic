@@ -18,10 +18,18 @@ public class RandomResponseAndLatencyHttpEngine implements HttpAsyncEngine {
 
     private final Random random = new Random();
 
+    private final int minSleepTime;
+    private final int maxSleepTime;
+
+    public RandomResponseAndLatencyHttpEngine(int minSleepTime, int maxSleepTime) {
+        this.minSleepTime = minSleepTime;
+        this.maxSleepTime = maxSleepTime;
+    }
+
     @Override
     public Future<HttpResponse<InputStream>> dispatch(HttpRequest request) {
         return Futures.withCallable(() -> {
-            Thread.sleep(random.nextInt(400));
+            Thread.sleep(random.nextInt(maxSleepTime - minSleepTime) + minSleepTime);
             String response = Long.toString(random.nextLong());
             return new HttpResponse<InputStream>() {
                 @Override
