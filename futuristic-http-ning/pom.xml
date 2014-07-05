@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>futuristic-http</artifactId>
+        <artifactId>futuristic</artifactId>
         <groupId>com.github.julman99</groupId>
-        <version>0.1.0</version>
-        <relativePath>../futuristic-http/pom.xml</relativePath>
+        <version>0.2.0</version>
+        <relativePath>../futuristic/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,6 +17,11 @@
             <groupId>com.ning</groupId>
             <artifactId>async-http-client</artifactId>
             <version>1.7.22</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.julman99</groupId>
+            <artifactId>futuristic-http</artifactId>
+            <version>0.2.0</version>
         </dependency>
     </dependencies>
 

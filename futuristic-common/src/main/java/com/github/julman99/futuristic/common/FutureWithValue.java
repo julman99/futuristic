@@ -1,7 +1,8 @@
 package com.github.julman99.futuristic.common;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import com.github.julman99.futuristic.common.function.ConsumerWithException;
+import com.github.julman99.futuristic.common.function.ExceptionTrapper;
+import com.github.julman99.futuristic.common.function.FunctionWithException;
 
 /**
  * @autor: julio
@@ -20,7 +21,7 @@ final class FutureWithValue<T> implements Future<T> {
     }
 
     @Override
-    public Future<T> consume(Consumer<T> consumer) {
+    public Future<T> consume(ConsumerWithException<T> consumer) {
         try {
             consumer.accept(value);
             return this;
@@ -30,7 +31,7 @@ final class FutureWithValue<T> implements Future<T> {
     }
 
     @Override
-    public <R> Future<R> map(Function<T, R> mapper) {
+    public <R> Future<R> map(FunctionWithException<T, R> mapper) {
         try {
             R mapped = mapper.apply(value);
             return new FutureWithValue<>(mapped);
@@ -40,7 +41,7 @@ final class FutureWithValue<T> implements Future<T> {
     }
 
     @Override
-    public <R> Future<R> mapFuture(Function<T, Future<R>> mapper) {
+    public <R> Future<R> mapFuture(FunctionWithException<T, Future<R>> mapper) {
         try {
             Future<R> mapped = mapper.apply(value);
             return mapped;

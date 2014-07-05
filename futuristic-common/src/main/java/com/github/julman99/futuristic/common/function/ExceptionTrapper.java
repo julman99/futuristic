@@ -1,4 +1,4 @@
-package com.github.julman99.futuristic.common;
+package com.github.julman99.futuristic.common.function;
 
 /**
  * @autor: julio

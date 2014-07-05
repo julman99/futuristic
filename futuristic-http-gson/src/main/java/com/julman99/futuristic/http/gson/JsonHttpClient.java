@@ -3,6 +3,9 @@ package com.julman99.futuristic.http.gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.julman99.futuristic.http.BaseHttpClient;
+import com.julman99.futuristic.http.HttpAsyncEngine;
+import com.julman99.futuristic.http.HttpResponse;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

@@ -1,9 +1,11 @@
 package com.github.julman99.futuristic.common;
 
+import com.github.julman99.futuristic.common.function.ConsumerWithException;
+import com.github.julman99.futuristic.common.function.ExceptionTrapper;
+import com.github.julman99.futuristic.common.function.FunctionWithException;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * @autor: julio
@@ -58,7 +60,7 @@ public final class FutureWithTrigger<T> {
             }
 
             @Override
-            public Future<T> consume(Consumer<T> consumer) {
+            public Future<T> consume(ConsumerWithException<T> consumer) {
                 FutureWithTrigger<T> nextFuture = new FutureWithTrigger<>();
                 FutureWithTrigger.this.callbackLink.addTo(new Callback<T>() {
                     @Override
@@ -81,18 +83,22 @@ public final class FutureWithTrigger<T> {
             }
 
             @Override
-            public <R> Future<R> map(Function<T, R> mapper) {
+            public <R> Future<R> map(FunctionWithException<T, R> mapper) {
                 return mapFuture(t -> new FutureWithValue<R>(mapper.apply(t)));
             }
 
             @Override
-            public <R> Future<R> mapFuture(Function<T, Future<R>> mapper) {
+            public <R> Future<R> mapFuture(FunctionWithException<T, Future<R>> mapper) {
                 FutureWithTrigger<R> nextFuture = new FutureWithTrigger<>();
                 FutureWithTrigger.this.callbackLink.addTo(new Callback<T>() {
                     @Override
                     public void completed(T result) {
-                        Future<R> mapped = mapper.apply(result);
-                        mapped.consume(nextFuture.getTrigger());
+                        try {
+                            Future<R> mapped = mapper.apply(result);
+                            mapped.consume(nextFuture.getTrigger());
+                        } catch (Exception ex) {
+                            failed(ex);
+                        }
                     }
 
                     @Override

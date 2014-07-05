@@ -5,20 +5,19 @@
     <parent>
         <artifactId>futuristic</artifactId>
         <groupId>com.github.julman99</groupId>
-        <version>1.0</version>
+        <version>0.2.0</version>
         <relativePath>../futuristic/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.julman99</groupId>
     <artifactId>futuristic-http</artifactId>
-    <version>0.1.0</version>
 
     <dependencies>
         <dependency>
             <groupId>com.github.julman99</groupId>
             <artifactId>futuristic-common</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

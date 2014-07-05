@@ -1,14 +1,12 @@
 package com.github.julman99.http.ning;
 
+import com.github.julman99.futuristic.common.Future;
+import com.github.julman99.futuristic.common.Futures;
+import com.google.common.io.ByteStreams;
+import com.julman99.futuristic.http.*;
 import com.ning.http.client.*;
 import com.ning.http.client.generators.ByteArrayBodyGenerator;
 import com.ning.http.client.generators.InputStreamBodyGenerator;
-import com.pixable.utils.callback.Callback;
-import com.pixable.utils.future.Future;
-import com.pixable.utils.future.Futures;
-import com.pixable.utils.future.Transformer;
-import com.pixable.utils.future.Trigger;
-import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class NingHttpAsyncEngine implements HttpAsyncEngine {
             if (request.getVerb() != HttpVerb.GET) {
                 InputStream bodyStream = request.getBody().toInputStream();
                 if(bodyStream instanceof ByteArrayInputStream){
-                    ningRequest.setBody(new ByteArrayBodyGenerator(IOUtils.toByteArray(bodyStream)));
+                    ningRequest.setBody(new ByteArrayBodyGenerator(ByteStreams.toByteArray(bodyStream)));
                 } else {
                     ningRequest.setBody(new InputStreamBodyGenerator(bodyStream));
                 }
@@ -71,62 +69,62 @@ public class NingHttpAsyncEngine implements HttpAsyncEngine {
     }
 
     protected Future<HttpResponse<InputStream>> executeRequest(final Request httpRequest) {
-        return Futures.withTrigger(new Trigger<Response>() {
-            @Override
-            public void triggerLater(final Callback<Response> trigger) throws Exception {
-                client.executeRequest(httpRequest, new AsyncCompletionHandler<Response>() {
-                    @Override
-                    public Response onCompleted(final Response ningResponse) throws Exception {
-                        trigger.completed(ningResponse);
-                        return ningResponse;
-                    }
-
-                    @Override
-                    public void onThrowable(Throwable t) {
-                        if (t instanceof Exception) {
-                            trigger.failed((Exception) t);
-                        } else {
-                            trigger.failed(new RuntimeException(t));
+        Future<Response> ningResponseFuture = Futures.withCallback(trigger -> {
+                try {
+                    client.executeRequest(httpRequest, new AsyncCompletionHandler<Response>() {
+                        @Override
+                        public Response onCompleted(final Response ningResponse) throws Exception {
+                            trigger.completed(ningResponse);
+                            return ningResponse;
                         }
-                    }
-                });
+
+                        @Override
+                        public void onThrowable(Throwable t) {
+                            if (t instanceof Exception) {
+                                trigger.failed((Exception) t);
+                            } else {
+                                trigger.failed(new RuntimeException(t));
+                            }
+                        }
+                    });
+                }catch (IOException ex) {
+                    trigger.failed(ex);
+                }
+            });
+
+        return ningResponseFuture.map(ningResponse -> {
+            final HttpParams headers = new HttpParams();
+            for (Map.Entry<String, List<String>> entry : ningResponse.getHeaders().entrySet()) {
+                headers.putAll(entry.getKey(), entry.getValue());
             }
-        }).then(new Transformer<Response, HttpResponse<InputStream>>() {
-            @Override
-            public HttpResponse<InputStream> completed(final Response ningResponse) throws Exception {
-                final HttpParams headers = new HttpParams();
-                for(Map.Entry<String, List<String>> entry: ningResponse.getHeaders().entrySet()){
-                    headers.putAll(entry.getKey(), entry.getValue());
+
+            HttpResponse<InputStream> response = new HttpResponse<InputStream>() {
+
+                @Override
+                public HttpParams getHeader() {
+                    return headers;
                 }
 
-                HttpResponse<InputStream> response = new HttpResponse<InputStream>() {
+                @Override
+                public int getStatusCode() {
+                    return ningResponse.getStatusCode();
+                }
 
-                    @Override
-                    public HttpParams getHeader() {
-                        return headers;
-                    }
+                @Override
+                public String getStatusMessage() {
+                    return ningResponse.getStatusText();
+                }
 
-                    @Override
-                    public int getStatusCode() {
-                        return ningResponse.getStatusCode();
+                @Override
+                public InputStream getBody() {
+                    try {
+                        return ningResponse.getResponseBodyAsStream();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-
-                    @Override
-                    public String getStatusMessage() {
-                        return ningResponse.getStatusText();
-                    }
-
-                    @Override
-                    public InputStream getBody() {
-                        try {
-                            return ningResponse.getResponseBodyAsStream();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                };
-                return response;
-            }
+                }
+            };
+            return response;
         });
     }
 }
