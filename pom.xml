@@ -11,7 +11,7 @@
     <name>futuristic</name>
 
     <modules>
-        <module>futuristic-common</module>
+        <module>futuristic-core</module>
         <module>futuristic-http</module>
         <module>futuristic-http-gson</module>
         <module>futuristic-http-ning</module>
@@ -79,32 +79,35 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>com.github.github</groupId>
-                    <artifactId>site-maven-plugin</artifactId>
-                    <version>0.9</version>
-                    <configuration>
-                        <message>Maven artifacts for ${project.artifactId} ${project.version}</message>  <!-- git commit message -->
-                        <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-                        <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-                        <branch>refs/heads/master</branch>                       <!-- remote branch name -->
-                        <includes><include>**/*</include></includes>
-                        <repositoryName>mvn-repo</repositoryName>      <!-- github repo name -->
-                        <repositoryOwner>julman99</repositoryOwner>    <!-- github username  -->
-                        <merge>true</merge>
-                    </configuration>
-                    <executions>
-                        <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-                        <execution>
-                            <goals>
-                                <goal>site</goal>
-                            </goals>
-                            <phase>deploy</phase>
-                        </execution>
-                    </executions>
-                </plugin>
+
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.9</version>
+                <configuration>
+                    <message>Maven artifacts for ${project.artifactId} ${project.version}</message>  <!-- git commit message -->
+                    <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+                    <branch>refs/heads/master</branch>                       <!-- remote branch name -->
+                    <includes><include>**/*</include></includes>
+                    <repositoryName>mvn-repo</repositoryName>      <!-- github repo name -->
+                    <repositoryOwner>julman99</repositoryOwner>    <!-- github username  -->
+                    <merge>true</merge>
+                </configuration>
+                <executions>
+                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
