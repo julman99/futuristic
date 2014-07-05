@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public final class Futures {
 
-    private static final Executor EXECUTOR = Executors.newCachedThreadPool();
+    private static final Executor EXECUTOR = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private Futures(){
 
