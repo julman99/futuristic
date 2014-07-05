@@ -122,13 +122,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <!-- github server corresponds to entry in ~/.m2/settings.xml -->
-        <github.global.server>github</github.global.server>
-        <futuristic-version>0.2.0</futuristic-version>
-    </properties>
-
-
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -136,5 +129,11 @@
             <url>https://raw.github.com/julman99/mvn-repo/master</url>
         </repository>
     </distributionManagement>
+
+    <properties>
+        <!-- github server corresponds to entry in ~/.m2/settings.xml -->
+        <github.global.server>github</github.global.server>
+        <futuristic-version>0.2.0</futuristic-version>
+    </properties>
 
 </project>
