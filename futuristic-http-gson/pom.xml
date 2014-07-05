@@ -5,7 +5,7 @@
     <parent>
         <artifactId>futuristic</artifactId>
         <groupId>com.github.julman99</groupId>
-        <version>0.2.0</version>
+        <version>${futuristic-version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.github.julman99</groupId>
             <artifactId>futuristic-http</artifactId>
-            <version>0.2.0</version>
+            <version>${futuristic-version}</version>
         </dependency>
     </dependencies>
 

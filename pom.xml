@@ -7,7 +7,7 @@
     <groupId>com.github.julman99</groupId>
     <artifactId>futuristic</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.0</version>
+    <version>${futuristic-version}</version>
     <name>futuristic</name>
 
     <modules>
@@ -119,7 +119,9 @@
     <properties>
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
         <github.global.server>github</github.global.server>
+        <futuristic-version>0.2.0</futuristic-version>
     </properties>
+
 
     <distributionManagement>
         <repository>
