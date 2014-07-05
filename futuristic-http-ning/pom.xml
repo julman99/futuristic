@@ -22,6 +22,21 @@
             <groupId>com.github.julman99</groupId>
             <artifactId>futuristic-http</artifactId>
             <version>0.2.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.julman99</groupId>
+            <artifactId>futuristic-http</artifactId>
+            <version>0.2.0</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>1.18</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
