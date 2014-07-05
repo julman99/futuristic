@@ -114,4 +114,27 @@ public abstract class AbstractHttpAsyncEngineTest {
 
         assertEquals("OK", response.getBody());
     }
+
+    @Test
+    public void testHeaderSending() throws Exception {
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo("/test"))
+            .withHeader("Test", WireMock.matching("ok"))
+            .withHeader("Test2", WireMock.matching("ok2"))
+            .willReturn(WireMock.aResponse()
+                .withStatus(200)
+                .withBody("OK")));
+
+        StringHttpClient stringHttpClient = createStringHttpClient();
+        String url = "http://localhost:8089/test";
+
+        HttpRequest httpRequest = new HttpRequest.Builder()
+            .header("Test", "ok")
+            .header("Test2", "ok2")
+            .url(url)
+            .create();
+
+        HttpResponse<String> response = stringHttpClient.send(httpRequest).get();
+
+        assertEquals("OK", response.getBody());
+    }
 }
