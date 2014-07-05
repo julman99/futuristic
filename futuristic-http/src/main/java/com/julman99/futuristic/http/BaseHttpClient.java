@@ -1,6 +1,7 @@
 package com.julman99.futuristic.http;
 
 import com.github.julman99.futuristic.common.Future;
+import com.google.common.io.ByteStreams;
 
 import java.io.InputStream;
 
@@ -11,30 +12,14 @@ public abstract class BaseHttpClient<T> {
 
     private HttpAsyncEngine engine;
     private HttpParams defaultHeaders = new HttpParams();
-    private boolean nonStatus200Error = false;
-
-    /*
-     * If a status code different that 200 is received, an exception will be thrown.
-     * Otherwise, a json element will be tried to be parsed from the response if present
-     * and will be returned in the result
-     */
-    public void setNonStatus200Error(boolean nonStatus200Error) {
-        this.nonStatus200Error = nonStatus200Error;
-    }
-
-    public boolean isNonStatus200Error() {
-        return nonStatus200Error;
-    }
 
     public BaseHttpClient(HttpAsyncEngine engine) {
         this.engine = engine;
     }
 
-
     public void addDefaultHeader(String key, String value) {
         defaultHeaders.put(key, value);
     }
-
 
     //GET
     public Future<HttpResponse<T>> get(String url) {
@@ -113,12 +98,11 @@ public abstract class BaseHttpClient<T> {
         request.getHeaders().putAll(defaultHeaders);
         return engine.dispatch(request)
             .map(response -> {
-                if (response.getStatusCode() / 100 != 2 && nonStatus200Error) {
+                if (response.getStatusCode() / 100 != 2) {
                     String reason = response.getStatusMessage();
-//                    if (response.getBody() != null) {
-//                        InputStreamReader requestBody = new InputStreamReader(response.getBody());
-//                        reason += " - " + IOUtils.toString(requestBody);
-//                    }
+                    if (response.getBody() != null) {
+                        reason += " - " + new String(ByteStreams.toByteArray(response.getBody()));
+                    }
                     throw new HttpException(response.getStatusCode(), reason);
                 } else {
                     return buildResponse(response);

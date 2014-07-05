@@ -72,7 +72,6 @@ public class BaseHttpClientTest {
                 //nothing
             }
         });
-        http.setNonStatus200Error(true);
 
         try{
             http.get("200").get();
@@ -92,14 +91,6 @@ public class BaseHttpClientTest {
             assertEquals(404, ex.getStatusCode());
         }catch (Exception ex){
             fail("An HttpException exception should have been thrown");
-        }
-
-        http.setNonStatus200Error(false);
-        try{
-            http.get("404").get();
-            http.get("500").get();
-        }catch (Exception ex){
-            fail("No exception should have been thrown");
         }
     }
 
