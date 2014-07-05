@@ -32,7 +32,7 @@ public abstract class BaseHttpClient<T> {
                 .method(HttpVerb.GET)
                 .query(query)
                 .create();
-        return exec(request);
+        return send(request);
     }
 
     //POST
@@ -51,7 +51,7 @@ public abstract class BaseHttpClient<T> {
                 .query(query)
                 .body(body)
                 .create();
-        return exec(request);
+        return send(request);
     }
 
     //PUT
@@ -70,7 +70,7 @@ public abstract class BaseHttpClient<T> {
                 .query(query)
                 .body(body)
                 .create();
-        return exec(request);
+        return send(request);
     }
 
 
@@ -90,11 +90,11 @@ public abstract class BaseHttpClient<T> {
                 .query(query)
                 .body(body)
                 .create();
-        return exec(request);
+        return send(request);
     }
 
     //ANY REQUEST
-    public Future<HttpResponse<T>> exec(final HttpRequest request) {
+    public Future<HttpResponse<T>> send(final HttpRequest request) {
         request.getHeaders().putAll(defaultHeaders);
         return engine.dispatch(request)
             .map(response -> {
