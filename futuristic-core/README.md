@@ -1,13 +1,6 @@
-# Futuristic
+# Futuristic  Core
 
-The best way to do Future programming on Java 1.8. 
-
-Futuristic allows you develop from scratch or convert existing Callback-based programs to Future-based. 
-
-Its mission is to allow developers to forget about the Callback hell and at the same time create beautiful, robust and
-readable code.
-
-This library is inspired in the Promises of AngularJS.
+Futuristic Core lets you create and consume Futures.
 
 ## Consuming futures
 
@@ -35,7 +28,7 @@ someFuture.consume(result -> {
 ### Transforming the result
 
 Allows you to chain different callbacks to transform the result of a future. For example, image a method that must
-return the concatenated name and the age of a User. Now imagine the User must be retreived asynchronously from a server.
+return the concatenated name and the age of a User. Now imagine the User must be retrieved asynchronously from a server.
  
 With the ```map``` method, you can transform a Future\<User\> to a Future\<String\> using very little code and without doing
 any callback-based programming.
@@ -126,7 +119,10 @@ FuturePool<Integer> pool = new FuturePool<>();
 //Then you can call .listen() as many times as you want. Its only argument 
 //is a Future object that you want to listen on
 pool.listen(
-    Futures.withValue(1)
+    Futures.withValue(1),
+    Futures.withValue(2),
+    //... any number of futures
+    Futures.withValue(999)
 );
 
 //After the pool has been given all the listens, you have two options:
@@ -211,11 +207,11 @@ Add to your ```pom.xml```
 <dependencies>
     <dependency>
         <groupId>com.github.julman99</groupId>
-        <artifactId>futuristic</artifactId>
-        <version>0.1.1</version>
+        <artifactId>futuristic-core</artifactId>
+        <version>0.2.0</version>
     </dependency>
 </dependencies>
 ```
 ### Jar
 
-Download from [here](https://github.com/julman99/mvn-repo/raw/master/com/github/julman99/futuristic/0.1.1/futuristic-0.1.1.jar)
+Download from [here](https://github.com/julman99/mvn-repo/raw/master/com/github/julman99/futuristic/0.2.0/futuristic-core-0.2.0.jar)
