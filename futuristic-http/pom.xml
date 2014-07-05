@@ -24,12 +24,6 @@
             <artifactId>guava</artifactId>
             <version>15.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>1.18</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 </project>
