@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.julman99</groupId>
-    <artifactId>futuristic-common</artifactId>
+    <artifactId>futuristic-core</artifactId>
     <packaging>jar</packaging>
 
     <build>

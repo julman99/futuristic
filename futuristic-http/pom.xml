@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.julman99</groupId>
-            <artifactId>futuristic-common</artifactId>
+            <artifactId>futuristic-core</artifactId>
             <version>${futuristic-version}</version>
         </dependency>
         <dependency>
