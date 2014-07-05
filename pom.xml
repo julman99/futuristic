@@ -11,10 +11,10 @@
     <name>futuristic</name>
 
     <modules>
-        <module>../futuristic-common</module>
-        <module>../futuristic-http</module>
-        <module>../futuristic-http-gson</module>
-        <module>../futuristic-http-ning</module>
+        <module>futuristic-common</module>
+        <module>futuristic-http</module>
+        <module>futuristic-http-gson</module>
+        <module>futuristic-http-ning</module>
     </modules>
 
     <build>

@@ -6,7 +6,7 @@
         <artifactId>futuristic</artifactId>
         <groupId>com.github.julman99</groupId>
         <version>0.2.0</version>
-        <relativePath>../futuristic/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
