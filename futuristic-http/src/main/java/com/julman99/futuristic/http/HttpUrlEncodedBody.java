@@ -1,5 +1,7 @@
 package com.julman99.futuristic.http;
 
+import com.julman99.futuristic.http.util.GenericBuilder;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -9,11 +11,11 @@ import java.io.UnsupportedEncodingException;
  */
 public class HttpUrlEncodedBody extends HttpParams implements HttpBody {
 
-    public HttpUrlEncodedBody(){
+    private HttpUrlEncodedBody(){
 
     }
 
-    public HttpUrlEncodedBody(HttpParams params){
+    private HttpUrlEncodedBody(HttpParams params){
         this.putAll(params);
     }
 
@@ -35,5 +37,23 @@ public class HttpUrlEncodedBody extends HttpParams implements HttpBody {
             //nothing because UTF-8 is hardcoded
         }
         return null;
+    }
+
+    public static class Builder implements GenericBuilder<HttpUrlEncodedBody> {
+
+        private final HttpParams body = new HttpParams();
+
+        Builder() {
+        }
+
+        public Builder param(String name, Object value){
+            body.put(name, value);
+            return this;
+        }
+
+        public HttpUrlEncodedBody build(){
+            return new HttpUrlEncodedBody(body);
+        }
+
     }
 }

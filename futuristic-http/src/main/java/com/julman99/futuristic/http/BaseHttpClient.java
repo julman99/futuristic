@@ -21,79 +21,11 @@ public abstract class BaseHttpClient<T> {
         defaultHeaders.put(key, value);
     }
 
-    //GET
-    public Future<HttpResponse<T>> get(String url) {
-        return this.get(url, new HttpParams());
+
+    public Future<HttpResponse<T>> request(final HttpRequest.Builder request) {
+        return this.send(request.build());
     }
 
-    public Future<HttpResponse<T>> get(String url,  HttpParams query) {
-        HttpRequest request = new HttpRequest.Builder()
-                .url(url)
-                .method(HttpVerb.GET)
-                .query(query)
-                .create();
-        return send(request);
-    }
-
-    //POST
-    public Future<HttpResponse<T>> post(String url) {
-        return post(url, new HttpParams(), new HttpUrlEncodedBody());
-    }
-
-    public Future<HttpResponse<T>> post(String url,  HttpBody body) {
-        return post(url, new HttpParams(), body);
-    }
-
-    public Future<HttpResponse<T>> post(String url,  HttpParams query, HttpBody body) {
-        HttpRequest request = new HttpRequest.Builder()
-                .url(url)
-                .method(HttpVerb.POST)
-                .query(query)
-                .body(body)
-                .create();
-        return send(request);
-    }
-
-    //PUT
-    public Future<HttpResponse<T>> put(String url) {
-        return put(url, new HttpParams(), new HttpUrlEncodedBody());
-    }
-
-    public Future<HttpResponse<T>> put(String url,  HttpParams query) {
-        return put(url, query, new HttpUrlEncodedBody());
-    }
-
-    public Future<HttpResponse<T>> put(String url,  HttpParams query, HttpBody body) {
-        HttpRequest request = new HttpRequest.Builder()
-                .url(url)
-                .method(HttpVerb.PUT)
-                .query(query)
-                .body(body)
-                .create();
-        return send(request);
-    }
-
-
-    //DELETE
-    public Future<HttpResponse<T>> delete(String url) {
-        return delete(url, new HttpParams(), new HttpUrlEncodedBody());
-    }
-
-    public Future<HttpResponse<T>> delete(String url,  HttpParams query) {
-        return delete(url, query, new HttpUrlEncodedBody());
-    }
-
-    public Future<HttpResponse<T>> delete(String url,  HttpParams query, HttpBody body) {
-        HttpRequest request = new HttpRequest.Builder()
-                .url(url)
-                .method(HttpVerb.DELETE)
-                .query(query)
-                .body(body)
-                .create();
-        return send(request);
-    }
-
-    //ANY REQUEST
     public Future<HttpResponse<T>> send(final HttpRequest request) {
         request.getHeaders().putAll(defaultHeaders);
         return engine.dispatch(request)

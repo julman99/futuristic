@@ -48,7 +48,7 @@ public class NingHttpAsyncEngine implements HttpAsyncEngine {
                 ningRequest.setHeader(entry.getKey(), entry.getValue());
             }
 
-            if (request.getVerb() != HttpVerb.GET) {
+            if (request.getVerb() != HttpVerb.GET && request.getBody() != null) {
                 InputStream bodyStream = request.getBody().toInputStream();
                 if(bodyStream instanceof ByteArrayInputStream){
                     ningRequest.setBody(new ByteArrayBodyGenerator(ByteStreams.toByteArray(bodyStream)));

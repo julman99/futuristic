@@ -1,6 +1,6 @@
 package com.julman99.futuristic.http;
 
-import java.util.Map;
+import com.julman99.futuristic.http.util.GenericBuilder;
 
 /**
  * @autor: julio
@@ -20,76 +20,62 @@ public interface HttpRequest {
 
     boolean followRedirects();
 
-    static class Builder{
+    static class Builder<T> implements GenericBuilder<HttpRequest> {
 
-        private String url;
-        private HttpParams headers = new HttpParams();
-        private HttpParams query = new HttpParams();
+        private final String url;
+        private final HttpVerb verb;
+        private final HttpParams headers = new HttpParams();
+        private final HttpParams query = new HttpParams();
+
         private HttpBody body;
-        private HttpVerb verb = HttpVerb.GET;
         private boolean followRedirects = false;
 
-        private HttpRequest request;
-
-        public Builder(){
-
-        }
-
-        public Builder(String url){
+        public Builder(String url, HttpVerb verb){
             this.url = url;
+            this.verb = verb;
         }
 
-        public Builder query(String name, String value){
+        public Builder<T> query(String name, String value){
             this.query.put(name, value);
             return this;
         }
 
-        public Builder query(HttpParams query){
+        public Builder<T> query(HttpParams query){
             this.query.putAll(query);
             return this;
         }
 
-        public Builder header(String name, String value){
+        public Builder<T> header(String name, String value){
             this.headers.put(name, value);
             return this;
         }
 
-        public Builder headers(HttpParams headers){
+        public Builder<T> header(HttpParams headers){
             this.headers.putAll(headers);
             return this;
         }
 
-        public Builder headers(Map<String, String> headers){
-            this.headers.putAll(headers);
+        public Builder<T> body(String contentType, String body){
+            this.body(new HttpStringBody(contentType, body));
             return this;
         }
 
-        public Builder body(String body){
-            this.body(new HttpStringBody(body));
-            return this;
-        }
-
-        public Builder body(HttpBody body){
+        public Builder<T> body(HttpBody body){
             this.body = body;
             return this;
         }
 
-        public Builder method(HttpVerb verb){
-            this.verb = verb;
+        public Builder<T> body(GenericBuilder<? extends HttpBody> body){
+            this.body = body.build();
             return this;
         }
 
-        public Builder url(String url){
-            this.url = url;
-            return this;
-        }
-
-        public Builder followRedirects(boolean followRedirects){
+        public Builder<T> followRedirects(boolean followRedirects){
             this.followRedirects = followRedirects;
             return this;
         }
 
-        public HttpRequest create(){
+        public HttpRequest build(){
 
             if(verb == HttpVerb.GET){
                 this.headers.removeAll(HEADER_CONTENT_TYPE); //Quick-dirty fix to prevent content type on get request
