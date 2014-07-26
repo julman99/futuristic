@@ -10,7 +10,7 @@ If you just want to wait for the result of a Future, blocking the thread, this i
 
 ```java
 Future<Integer> someFuture = ...;
-Integer result = someFuture.get(); //This will block until the result of the future is available
+Integer result = someFuture.await(); //This will block until the result of the future is available
 ```
 
 ### Asynchronous consuming
