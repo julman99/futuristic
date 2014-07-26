@@ -5,7 +5,7 @@ import java.io.InputStream;
 /**
  * @autor: julio
  */
-public class HttpBodies {
+public class Bodies {
 
     public static HttpUrlEncodedBody.Builder withForm(){
         return new HttpUrlEncodedBody.Builder();

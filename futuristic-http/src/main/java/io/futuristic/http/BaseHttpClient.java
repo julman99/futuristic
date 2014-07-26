@@ -23,10 +23,10 @@ public abstract class BaseHttpClient<T> {
 
 
     public Future<HttpResponse<T>> request(final HttpRequest.Builder request) {
-        return this.send(request.build());
+        return this.request(request.build());
     }
 
-    public Future<HttpResponse<T>> send(final HttpRequest request) {
+    public Future<HttpResponse<T>> request(final HttpRequest request) {
         request.getHeaders().putAll(defaultHeaders);
         return engine.dispatch(request)
             .map(response -> {

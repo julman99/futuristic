@@ -2,7 +2,6 @@ package io.futuristic.http;
 
 import io.futuristic.Future;
 import io.futuristic.Futures;
-import io.futuristic.http.*;
 import io.futuristic.http.util.RandomResponseAndLatencyHttpEngine;
 import org.junit.Test;
 
@@ -26,7 +25,7 @@ public class BaseHttpClientTest {
 
         StringHttpClient http = new StringHttpClient(new RandomResponseAndLatencyHttpEngine(1, 30));
         for(int i=0;i<n;i++){
-            http.request(HttpRequests
+            http.request(Requests
                 .get("SOME_URL")
             ).consume(r -> {
                 latch.countDown();
@@ -45,19 +44,19 @@ public class BaseHttpClientTest {
         StringHttpClient http = new StringHttpClient(new StatusCodeReplyHttpAsyncEngine());
 
         try{
-            http.request(HttpRequests.get("200")).get();
-            http.request(HttpRequests.get("201")).get();
-            http.request(HttpRequests.get("202")).get();
-            http.request(HttpRequests.get("203")).get();
-            http.request(HttpRequests.get("204")).get();
-            http.request(HttpRequests.get("205")).get();
-            http.request(HttpRequests.get("206")).get();
+            http.request(Requests.get("200")).await();
+            http.request(Requests.get("201")).await();
+            http.request(Requests.get("202")).await();
+            http.request(Requests.get("203")).await();
+            http.request(Requests.get("204")).await();
+            http.request(Requests.get("205")).await();
+            http.request(Requests.get("206")).await();
         }catch (Exception ex){
             fail("No exception should have been thrown");
         }
 
         try{
-            http.request(HttpRequests.get("404")).get();
+            http.request(Requests.get("404")).await();
         }catch (HttpException ex){
             assertEquals(404, ex.getStatusCode());
         }catch (Exception ex){
@@ -70,7 +69,7 @@ public class BaseHttpClientTest {
         StringHttpClient http = new StringHttpClient(new StatusCodeReplyHttpAsyncEngine());
 
         try{
-            http.request(HttpRequests.get("404")).get();
+            http.request(Requests.get("404")).await();
         }catch (HttpException ex){
             assertEquals(404, ex.getStatusCode());
         }catch (Exception ex){
@@ -83,7 +82,7 @@ public class BaseHttpClientTest {
         StringHttpClient http = new StringHttpClient(new StatusCodeReplyHttpAsyncEngine());
 
         try{
-            http.request(HttpRequests.get("500")).get();
+            http.request(Requests.get("500")).await();
         }catch (HttpException ex){
             assertEquals(500, ex.getStatusCode());
         }catch (Exception ex){

@@ -1,8 +1,5 @@
 package io.futuristic;
 
-import io.futuristic.Future;
-import io.futuristic.FuturePool;
-import io.futuristic.Futures;
 import org.junit.Test;
 
 import java.util.Set;
@@ -24,7 +21,7 @@ public class FuturePoolTest {
         long start = System.currentTimeMillis();
         pool.listen(delayed(40, 3));
         pool.listen(delayed(10, 2));
-        int result = pool.first().get();
+        int result = pool.first().await();
         long end = System.currentTimeMillis();
         long duration = end - start;
 
@@ -39,7 +36,7 @@ public class FuturePoolTest {
         long start = System.currentTimeMillis();
         pool.listen(delayed(40, 3));
         pool.listen(delayed(10, 2));
-        Set<Integer> result = pool.all().get();
+        Set<Integer> result = pool.all().await();
         long end = System.currentTimeMillis();
         long duration = end - start;
 

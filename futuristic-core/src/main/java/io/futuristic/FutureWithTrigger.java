@@ -33,7 +33,7 @@ public final class FutureWithTrigger<T> {
     private Future<T> createFuture(){
         return new Future<T>() {
             @Override
-            public T get() throws Exception{
+            public T await() throws Exception{
                 final CountDownLatch latch = new CountDownLatch(1);
                 final AtomicReference<T> resultReference = new AtomicReference<>();
                 final AtomicReference<Exception> errorReference = new AtomicReference<>();

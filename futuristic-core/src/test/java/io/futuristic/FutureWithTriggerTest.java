@@ -21,7 +21,7 @@ public class FutureWithTriggerTest {
         Object test = new Object();
         Triggerer.triggerValue(test, futureWithTrigger);
 
-        Object result = futureWithTrigger.getFuture().get();
+        Object result = futureWithTrigger.getFuture().await();
         assertEquals(test, result);
     }
 
@@ -32,7 +32,7 @@ public class FutureWithTriggerTest {
         Object test = new Object();
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
 
-        Object result = futureWithTrigger.getFuture().get();
+        Object result = futureWithTrigger.getFuture().await();
         assertEquals(test, result);
     }
 
@@ -54,7 +54,7 @@ public class FutureWithTriggerTest {
 
         AtomicBoolean test = new AtomicBoolean(false);
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
-        AtomicBoolean result = futureWithTrigger.getFuture().consume(b->b.set(true)).get();
+        AtomicBoolean result = futureWithTrigger.getFuture().consume(b->b.set(true)).await();
 
         assertEquals(test, result);
         assertTrue(test.get());
@@ -66,7 +66,7 @@ public class FutureWithTriggerTest {
 
         int test = 1;
         Triggerer.triggerValue(test, futureWithTrigger);
-        int result = futureWithTrigger.getFuture().map(i->i+1).get();
+        int result = futureWithTrigger.getFuture().map(i->i+1).await();
 
         assertEquals(test + 1, result);
     }
@@ -77,7 +77,7 @@ public class FutureWithTriggerTest {
 
         int test = 1;
         Triggerer.triggerValueAsync(10, test, futureWithTrigger);
-        int result = futureWithTrigger.getFuture().map(i->i+1).get();
+        int result = futureWithTrigger.getFuture().map(i->i+1).await();
 
         assertEquals(test + 1, result);
     }
@@ -92,7 +92,7 @@ public class FutureWithTriggerTest {
             FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             Triggerer.triggerValue(test + 1, next);
             return next.getFuture();
-        }).get();
+        }).await();
 
         assertEquals(test + 1, result);
     }
@@ -107,7 +107,7 @@ public class FutureWithTriggerTest {
             FutureWithTrigger<Integer> next = new FutureWithTrigger<>();
             Triggerer.triggerValueAsync(10, test + 1, next);
             return next.getFuture();
-        }).get();
+        }).await();
 
         assertEquals(test + 1, result);
     }
@@ -132,7 +132,7 @@ public class FutureWithTriggerTest {
             //This appends a "c" to the builder
             //Result should be "2c"
             s -> s.append("c")
-        ).get().toString();
+        ).await().toString();
 
         //Proof that all was executed in sequence
         assertEquals("2c", result);
@@ -152,7 +152,7 @@ public class FutureWithTriggerTest {
             }).trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
                 throw e;
-            }).get();
+            }).await();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -175,7 +175,7 @@ public class FutureWithTriggerTest {
             }).trapFuture(RuntimeException.class, e -> {
                 exceptionReference.set(e);
                 throw e;
-            }).get();
+            }).await();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -203,7 +203,7 @@ public class FutureWithTriggerTest {
             }).trap(DummyExceptions.DummyException1.class, e -> {
                 exceptionReference1.set(e); //This should be called because of the type
                 throw e;
-            }).get();
+            }).await();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -225,7 +225,7 @@ public class FutureWithTriggerTest {
             futureWithTrigger.getFuture().trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
                 throw e;
-            }).get();
+            }).await();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -246,7 +246,7 @@ public class FutureWithTriggerTest {
             futureWithTrigger.getFuture().trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
                 throw e;
-            }).get();
+            }).await();
 
             fail("Exception should have been thrown");
         } catch (Exception catchedException) {
@@ -267,7 +267,7 @@ public class FutureWithTriggerTest {
             int value = futureWithTrigger.getFuture().trap(RuntimeException.class, e -> {
                 exceptionReference.set(e);
                 return 1;
-            }).get();
+            }).await();
 
             assertEquals(1, value);
             assertEquals(exception, exceptionReference.get());
@@ -288,7 +288,7 @@ public class FutureWithTriggerTest {
             int value = futureWithTrigger.getFuture().trapFuture(RuntimeException.class, e -> {
                 exceptionReference.set(e);
                 return Futures.withValue(1);
-            }).get();
+            }).await();
 
             assertEquals(1, value);
             assertEquals(exception, exceptionReference.get());

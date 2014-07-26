@@ -16,7 +16,7 @@ final class FutureWithException<T> implements Future<T> {
     }
 
     @Override
-    public T get() throws Exception {
+    public T await() throws Exception {
         throw exception;
     }
 

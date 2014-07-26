@@ -14,7 +14,7 @@ public interface Future<T> {
      * @return
      * @throws Exception
      */
-    public T get() throws Exception;
+    public T await() throws Exception;
 
     /**
      * Called when the future value is available.

@@ -2,7 +2,6 @@ package io.futuristic.http;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import io.futuristic.http.*;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -35,9 +34,10 @@ public abstract class AbstractHttpAsyncEngineTest {
 
         StringHttpClient stringHttpClient = createStringHttpClient();
         String url = "http://localhost:8089/test";
-        HttpResponse<String> response = stringHttpClient.request(HttpRequests
+        HttpResponse<String> response = stringHttpClient.request(
+            Requests
             .get(url)
-        ).get();
+        ).await();
 
         HttpParams responseHeader = response.getHeader();
 
@@ -63,9 +63,10 @@ public abstract class AbstractHttpAsyncEngineTest {
 
         StringHttpClient stringHttpClient = createStringHttpClient();
         String url = "http://localhost:8089/test";
-        HttpResponse<String> response = stringHttpClient.request(HttpRequests
+        HttpResponse<String> response = stringHttpClient.request(
+            Requests
             .get(url)
-        ).get();
+        ).await();
 
         assertEquals("OK", response.getBody());
     }
@@ -81,13 +82,15 @@ public abstract class AbstractHttpAsyncEngineTest {
         StringHttpClient stringHttpClient = createStringHttpClient();
         String url = "http://localhost:8089/test";
 
-        HttpResponse<String> response = stringHttpClient.request(HttpRequests
-            .post(url)
-            .body(HttpBodies.withForm()
-                .param("a", 1)
-                .param("b", "2")
-            )
-        ).get();
+        HttpResponse<String> response = stringHttpClient.request(
+            Requests
+                .post(url)
+                .body(
+                    Bodies.withForm()
+                    .param("a", 1)
+                    .param("b", "2")
+                )
+        ).await();
 
         assertEquals("OK", response.getBody());
     }
@@ -101,10 +104,11 @@ public abstract class AbstractHttpAsyncEngineTest {
 
         StringHttpClient stringHttpClient = createStringHttpClient();
         String url = "http://localhost:8089/test";
-        HttpResponse<String> response = stringHttpClient.request(HttpRequests
+        HttpResponse<String> response = stringHttpClient.request(
+            Requests
             .put(url)
         )
-        .get();
+        .await();
 
         assertEquals("OK", response.getBody());
     }
@@ -118,9 +122,10 @@ public abstract class AbstractHttpAsyncEngineTest {
 
         StringHttpClient stringHttpClient = createStringHttpClient();
         String url = "http://localhost:8089/test";
-        HttpResponse<String> response = stringHttpClient.request(HttpRequests
+        HttpResponse<String> response = stringHttpClient.request(
+            Requests
             .delete(url)
-        ).get();
+        ).await();
 
         assertEquals("OK", response.getBody());
     }
@@ -137,11 +142,12 @@ public abstract class AbstractHttpAsyncEngineTest {
         StringHttpClient stringHttpClient = createStringHttpClient();
         String url = "http://localhost:8089/test";
 
-        HttpResponse<String> response = stringHttpClient.request(HttpRequests
-            .get(url)
-            .header("Test", "ok")
-            .header("Test2", "ok2")
-        ).get();
+        HttpResponse<String> response = stringHttpClient.request(
+            Requests
+                .get(url)
+                .header("Test", "ok")
+                .header("Test2", "ok2")
+        ).await();
 
         assertEquals("OK", response.getBody());
     }
