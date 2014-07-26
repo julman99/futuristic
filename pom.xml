@@ -9,6 +9,12 @@
     <packaging>pom</packaging>
     <version>${futuristic-version}</version>
     <name>futuristic</name>
+    <description>
+        An awesome and simple way to do Future programming on Java 1.8.
+
+        Futuristic allows you develop from scratch or convert existing Callback-based programs to Future-based. This will help you as to forget about the Callback hell and at the same time create beautiful, robust and readable code.
+    </description>
+    <url>http://futuristic.io</url>
 
     <licenses>
         <license>
@@ -18,8 +24,18 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Julio Viera</name>
+            <email>julio.viera@gmail.com</email>
+            <organizationUrl>https://github.com/julman99</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
-        <url>https://github.com/julman99/futuristic</url>
+        <connection>scm:git:git@github.com:julman99/futuristic.git</connection>
+        <developerConnection>scm:git:git@github.com:julman99/futuristic.git</developerConnection>
+        <url>git@github.com:julman99/futuristic.git</url>
     </scm>
 
     <modules>
