@@ -4,7 +4,7 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.julman99</groupId>
+    <groupId>io.futuristic</groupId>
     <artifactId>futuristic</artifactId>
     <packaging>pom</packaging>
     <version>${futuristic-version}</version>

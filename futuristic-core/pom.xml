@@ -5,13 +5,13 @@
 
     <parent>
         <artifactId>futuristic</artifactId>
-        <groupId>com.github.julman99</groupId>
+        <groupId>io.futuristic</groupId>
         <version>${futuristic-version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.julman99</groupId>
+    <groupId>io.futuristic</groupId>
     <artifactId>futuristic-core</artifactId>
     <packaging>jar</packaging>
 

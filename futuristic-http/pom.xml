@@ -4,18 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>futuristic</artifactId>
-        <groupId>com.github.julman99</groupId>
+        <groupId>io.futuristic</groupId>
         <version>${futuristic-version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.julman99</groupId>
+    <groupId>io.futuristic</groupId>
     <artifactId>futuristic-http</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.julman99</groupId>
+            <groupId>io.futuristic</groupId>
             <artifactId>futuristic-core</artifactId>
             <version>${futuristic-version}</version>
         </dependency>

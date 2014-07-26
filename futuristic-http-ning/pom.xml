@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>futuristic</artifactId>
-        <groupId>com.github.julman99</groupId>
+        <groupId>io.futuristic</groupId>
         <version>${futuristic-version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.julman99</groupId>
+    <groupId>io.futuristic</groupId>
     <artifactId>futuristic-http-ning</artifactId>
     <dependencies>
         <dependency>
@@ -19,14 +19,25 @@
             <version>1.7.22</version>
         </dependency>
         <dependency>
-            <groupId>com.github.julman99</groupId>
+            <groupId>io.futuristic</groupId>
+            <artifactId>futuristic-core</artifactId>
+            <version>${futuristic-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.futuristic</groupId>
             <artifactId>futuristic-http</artifactId>
             <version>${futuristic-version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
+        </dependency>
 
         <dependency>
-            <groupId>com.github.julman99</groupId>
+            <groupId>io.futuristic</groupId>
             <artifactId>futuristic-http</artifactId>
             <version>${futuristic-version}</version>
             <type>test-jar</type>

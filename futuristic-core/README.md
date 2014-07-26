@@ -206,7 +206,7 @@ Add to your ```pom.xml```
 <repositories>
 <dependencies>
     <dependency>
-        <groupId>com.github.julman99</groupId>
+        <groupId>io.futuristic</groupId>
         <artifactId>futuristic-core</artifactId>
         <version>0.2.0</version>
     </dependency>
