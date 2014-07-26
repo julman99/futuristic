@@ -159,7 +159,7 @@ Future<Integer> future = Futures.withValue(1);
 This will create a future that is inmedialty triggered and will produce the value. This kind of future triggers itself
 in the same thread as it was created.
 
-### With a know exception
+### With a know Exception
 
 Sometimes you need to return an Exception wrapped inside a future. In these cases you can do:
 
