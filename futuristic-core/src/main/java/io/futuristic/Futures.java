@@ -1,5 +1,6 @@
 package io.futuristic;
 
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -88,5 +89,61 @@ public final class Futures {
             }
         });
         return futureWithTrigger.getFuture();
+    }
+
+    /**
+     * Returns a future that will be known when all of the futures passed as arguments are known
+     * @param futures
+     * @param <T>
+     * @return a {@link java.util.Set} with the result of all the futures
+     */
+    public static <T> Future<Set<T>> all(Future<T>... futures) {
+        FuturePool<T> pool = new FuturePool<>();
+        for(Future<T> future: futures) {
+            pool.listen(future);
+        }
+        return pool.all();
+    }
+
+    /**
+     * Returns a future that will be known when all of the futures passed as arguments are known
+     * @param futures
+     * @param <T>
+     * @return a {@link java.util.Set} with the result of all the futures
+     */
+    public static <T> Future<Set<T>> all(Iterable<Future<T>> futures) {
+        FuturePool<T> pool = new FuturePool<>();
+        for(Future<T> future: futures) {
+            pool.listen(future);
+        }
+        return pool.all();
+    }
+
+    /**
+     * Returns a future that will be known when any of the futures passed as arguments are known
+     * @param futures
+     * @param <T>
+     * @return the result of the first future to be known
+     */
+    public static <T> Future<T> any(Future<T>... futures) {
+        FuturePool<T> pool = new FuturePool<>();
+        for(Future<T> future: futures) {
+            pool.listen(future);
+        }
+        return pool.first();
+    }
+
+    /**
+     * Returns a future that will be known when any of the futures passed as arguments are known
+     * @param futures
+     * @param <T>
+     * @return the result of the first future to be known
+     */
+    public static <T> Future<T> any(Iterable<Future<T>> futures) {
+        FuturePool<T> pool = new FuturePool<>();
+        for(Future<T> future: futures) {
+            pool.listen(future);
+        }
+        return pool.first();
     }
 }

@@ -20,7 +20,7 @@ public interface HttpRequest {
 
     boolean followRedirects();
 
-    static class Builder<T> implements GenericBuilder<HttpRequest> {
+    static final class Builder<T> implements GenericBuilder<HttpRequest> {
 
         private final String url;
         private final HttpVerb verb;
@@ -30,7 +30,7 @@ public interface HttpRequest {
         private HttpBody body;
         private boolean followRedirects = false;
 
-        public Builder(String url, HttpVerb verb){
+        Builder(String url, HttpVerb verb){
             this.url = url;
             this.verb = verb;
         }

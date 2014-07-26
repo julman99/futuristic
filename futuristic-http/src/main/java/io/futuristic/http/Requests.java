@@ -3,7 +3,11 @@ package io.futuristic.http;
 /**
  * @autor: julio
  */
-public class Requests {
+public final class Requests {
+
+    private Requests() {
+
+    }
 
     public static <T> HttpRequest.Builder<T> get(String url) {
         return new HttpRequest.Builder<>(url, HttpVerb.GET);

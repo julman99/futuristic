@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @autor: julio
  */
-public class FuturePool<T> {
+final class FuturePool<T> {
 
     //Sets to store the futures that are being listened and completed
     private final Set<Future<T>> listenedFutures = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -26,6 +26,9 @@ public class FuturePool<T> {
     //Structure to store the results
     private final Set<T> results = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
+    FuturePool() {
+
+    }
 
     public Future<T> listen(Future<T> future){
         listenedFutures.add(future);

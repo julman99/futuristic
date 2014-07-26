@@ -11,7 +11,7 @@ final class FutureWithException<T> implements Future<T> {
 
     private final Exception exception;
 
-    public FutureWithException(Exception exception) {
+    FutureWithException(Exception exception) {
         this.exception = exception;
     }
 

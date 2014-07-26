@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 /**
  * @autor: julio
  */
-public class NingHttpAsyncEngine implements HttpAsyncEngine {
+public final class NingHttpAsyncEngine implements HttpAsyncEngine {
 
     private AsyncHttpClient client;
 

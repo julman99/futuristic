@@ -6,15 +6,16 @@ import java.io.InputStream;
 /**
  * Created by rubioz on 12/5/13.
  */
-public class HttpStringBody implements HttpBody{
+public final class HttpStringBody implements HttpBody{
     private final String contentType;
     private final String body;
 
-    public HttpStringBody(String body){
+    HttpStringBody(String body){
         this("text/plain", body);
 
     }
-    public HttpStringBody(String contentType, String body){
+
+    HttpStringBody(String contentType, String body){
         this.contentType = contentType;
         this.body = body;
     }

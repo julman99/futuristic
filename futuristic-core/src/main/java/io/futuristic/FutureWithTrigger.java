@@ -16,7 +16,7 @@ public final class FutureWithTrigger<T> {
     private final Callback<T> triggerCallback;
     private final Future<T> future;
 
-    public FutureWithTrigger() {
+    FutureWithTrigger() {
         this.callbackLink = new CallbackLink<>();
         this.triggerCallback = this.callbackLink.getFrom();
         this.future = createFuture();

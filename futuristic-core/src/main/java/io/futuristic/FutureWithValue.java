@@ -11,7 +11,7 @@ final class FutureWithValue<T> implements Future<T> {
 
     private final T value;
 
-    public FutureWithValue(T value) {
+    FutureWithValue(T value) {
         this.value = value;
     }
 

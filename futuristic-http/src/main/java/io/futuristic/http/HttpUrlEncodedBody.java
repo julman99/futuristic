@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * @autor: julio
  */
-public class HttpUrlEncodedBody extends HttpParams implements HttpBody {
+public final class HttpUrlEncodedBody extends HttpParams implements HttpBody {
 
     private HttpUrlEncodedBody(){
 
@@ -39,7 +39,7 @@ public class HttpUrlEncodedBody extends HttpParams implements HttpBody {
         return null;
     }
 
-    public static class Builder implements GenericBuilder<HttpUrlEncodedBody> {
+    public final static class Builder implements GenericBuilder<HttpUrlEncodedBody> {
 
         private final HttpParams body = new HttpParams();
 

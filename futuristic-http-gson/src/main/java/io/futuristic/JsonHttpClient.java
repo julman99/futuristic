@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 /**
  * Client to perform http requests that return a json element
  * @author julio
- * @author moiesk
  */
 public class JsonHttpClient extends BaseHttpClient<JsonElement> {
 
