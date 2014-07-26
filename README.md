@@ -1,17 +1,15 @@
 # Futuristic
 
-The best way to do Future programming on Java 1.8. 
+An awesome and simple way to do Future programming on Java 1.8. 
 
-Futuristic allows you develop from scratch or convert existing Callback-based programs to Future-based. 
+Futuristic allows you develop from scratch or convert existing Callback-based programs to Future-based. This will help
+ you as to forget about the Callback hell and at the same time create beautiful, robust and readable code.
 
-Its mission is to allow developers to forget about the Callback hell and at the same time create beautiful, robust and
-readable code.
-
-This library is inspired in the Promises of AngularJS.
+Futuristic was inspired in the Promises of AngularJS.
 
 ## Components
 
-Futuristic is divides into several components so you can use what its best for your project
+Futuristic is divided into several components so you can use what its best for your project
 
 - [Futuristic Core](futuristic-core/): Core components of Futuristic. These are the building blocks that will enable
 you to do Future-based programming in a really easy way.
