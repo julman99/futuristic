@@ -110,27 +110,24 @@ The Exceptions will be correctly catched and they will be bubbled up to the ```t
 
 ### Synchronizing futures
 
-Sometimes you have multiple Futures and you want to wait for any or all. A class called FuturePool is provided 
-specifically for this.
+Sometimes you have multiple Futures and you want to wait for any or all. 
 
 ```java
-FuturePool<Integer> pool = new FuturePool<>();
-
-//Then you can call .listen() as many times as you want. Its only argument 
-//is a Future object that you want to listen on
-pool.listen(
+//Resolve all Futures
+Future<Set<Integer>> allFuture = Futures.all(
     Futures.withValue(1),
     Futures.withValue(2),
     //... any number of futures
     Futures.withValue(999)
 );
 
-//After the pool has been given all the listens, you have two options:
-
-Future<Integer> anyFuture = pool.any(); //Will return the result of the first Future to respond
-//or
-Future<Set<Integer>> allFuture = pool.all(); //Will return a Set with the result of all the Futures
-
+//Or resolve any Future
+Future<Set<Integer>> allFuture = Futures.any(
+    Futures.withValue(1),
+    Futures.withValue(2),
+    //... any number of futures
+    Futures.withValue(999)
+);
 ```
 
 ## Creating futures
