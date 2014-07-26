@@ -15,7 +15,7 @@ To get a simple url as a String:
 HttpAsyncEngine someHttpAsyncEngine = ... ; //Get some http async engine 
 
 StringHttpClient httpClient = new StringHttpClient(someHttpAsyncEngine); //Create the actual http client
-http.client.get("http://google.com")
+httpClient.request(Requests.get("http://google.com"))
     .consume(r -> {
         String responseText = r.getBody();
     });
@@ -31,12 +31,12 @@ HttpAsyncEngine someHttpAsyncEngine = ... ; //Get some http async engine
 
 StringHttpClient httpClient = new StringHttpClient(someHttpAsyncEngine); //Create the actual http client
 
-HttpParams queryParams = new HttpParams();
-queryParams.put("some", "param");
-queryParams.put("other", "param with spaces"); //will be automaticall url encoded
-
-http.client.get("http://google.com", queryParams)
-    .consume(r -> {
+httpClient.request(
+	    Requests.get("http://google.com")
+	    .query("some", "param")
+    	.query("other", "param with spaces"); //will be automaticall url encoded
+    	.header("some header", "for your request")
+	).consume(r -> {
         //code to handle response
         String body = r.getBody();            //Gets the body of the response
         HttpParams headers = r.getHeaders();  //Response headers
@@ -50,14 +50,15 @@ HttpAsyncEngine someHttpAsyncEngine = ... ; //Get some http async engine
 
 StringHttpClient httpClient = new StringHttpClient(someHttpAsyncEngine); //Create the actual http client
 
-HttpParams formParams = new HttpParams();
-formParams.put("some", "param");
-formParams.put("other", "param with spaces"); //will be automaticall url encoded
-
 HttpBody body = new HttpUrlEncodedBody(formParams);
 
-http.client.post("http://some/url", body)
-    .consume(r -> {
+httpClient.post(
+	Requests.post("http://some/url")
+	.body(
+		Bodies.withForm()
+		.param("some", "param");
+		.param("other", "param with spaces"); //will be automaticall url encoded
+	).consume(r -> {
         //code to handle response
     });
 ```
@@ -69,10 +70,11 @@ HttpAsyncEngine someHttpAsyncEngine = ... ; //Get some http async engine
 
 StringHttpClient httpClient = new StringHttpClient(someHttpAsyncEngine); //Create the actual http client
 
-HttpBody body = new HttpStringBody("text/plain", "This is a text body");
-
-http.client.post("http://some/url", body)
-    .consume(r -> {
+httpClient.post(
+	Requests.post("http://some/url")
+	.body(
+		Bodies.withString("text/plain", "arbitrary string")
+	).consume(r -> {
         //code to handle response
     });
 ```
