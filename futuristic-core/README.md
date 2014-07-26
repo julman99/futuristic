@@ -211,4 +211,4 @@ Add to your ```pom.xml```
 ```
 ### Jar
 
-Download from [here](https://github.com/julman99/mvn-repo/raw/master/com/github/julman99/futuristic/0.2.0/futuristic-core-0.2.0.jar)
+Download from [here](https://github.com/julman99/mvn-repo/raw/master/io/futuristic/futuristic-core/0.2.0/futuristic-core-0.2.0.jar)
