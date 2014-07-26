@@ -10,6 +10,18 @@
     <version>${futuristic-version}</version>
     <name>futuristic</name>
 
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/julman99/futuristic</url>
+    </scm>
+
     <modules>
         <module>futuristic-core</module>
         <module>futuristic-http</module>
