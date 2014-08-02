@@ -56,81 +56,19 @@
                         <target>1.8</target>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>deploy</phase>
-                            <goals><goal>jar-no-fork</goal></goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <phase>deploy</phase>
-                            <goals><goal>jar</goal></goals>
-                            <configuration>
-                                <additionalparam>-Xdoclint:none</additionalparam>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.2</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>test-jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.7</version>
-                    <configuration>
-                        <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>deploy</id>
-                            <phase>deploy</phase>
-                            <goals><goal>deploy</goal></goals>
-                        </execution>
-                    </executions>
-                </plugin>
+
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.9</version>
-                <configuration>
-                    <message>Maven artifacts for ${project.artifactId} ${project.version}</message>  <!-- git commit message -->
-                    <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-                    <branch>refs/heads/master</branch>                       <!-- remote branch name -->
-                    <includes><include>**/*</include></includes>
-                    <repositoryName>mvn-repo</repositoryName>      <!-- github repo name -->
-                    <repositoryOwner>julman99</repositoryOwner>    <!-- github username  -->
-                    <merge>true</merge>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
                 <executions>
-                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
                     <execution>
                         <goals>
-                            <goal>site</goal>
+                            <goal>test-jar</goal>
                         </goals>
-                        <phase>deploy</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -150,6 +88,40 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals><goal>jar-no-fork</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals><goal>jar</goal></goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.2</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -171,16 +143,9 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub ${project.artifactId} Repository</name>
-            <url>https://raw.github.com/julman99/mvn-repo/master</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
-    <properties>
-        <!-- github server corresponds to entry in ~/.m2/settings.xml -->
-        <github.global.server>github</github.global.server>
-        <futuristic-version>0.2.0</futuristic-version>
-    </properties>
 
 </project>
