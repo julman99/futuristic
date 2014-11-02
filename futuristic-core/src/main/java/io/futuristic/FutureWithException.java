@@ -22,17 +22,17 @@ final class FutureWithException<T> implements Future<T> {
 
     @Override
     public Future<T> consume(ConsumerWithException<T> consumer) {
-        return new FutureWithException<>(exception);
+        return this;
     }
 
     @Override
     public <R> Future<R> map(FunctionWithException<T, R> mapper) {
-        return new FutureWithException<>(exception);
+        return (Future<R>) this;
     }
 
     @Override
     public <R> Future<R> mapFuture(FunctionWithException<T, Future<R>> mapper) {
-        return new FutureWithException<>(exception);
+        return (Future<R>) this;
     }
 
     @Override
