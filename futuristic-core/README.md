@@ -205,10 +205,10 @@ Add to your ```pom.xml```
     <dependency>
         <groupId>io.futuristic</groupId>
         <artifactId>futuristic-core</artifactId>
-        <version>0.2.0</version>
+        <version>0.3.0</version>
     </dependency>
 </dependencies>
 ```
 ### Jar
 
-Download from [here](https://github.com/julman99/mvn-repo/raw/master/io/futuristic/futuristic-core/0.2.0/futuristic-core-0.2.0.jar)
+Download from [here](https://github.com/julman99/mvn-repo/raw/master/io/futuristic/futuristic-core/0.3.0/futuristic-core-0.3.0.jar)
