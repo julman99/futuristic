@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public final class NingHttpAsyncEngine implements HttpAsyncEngine {
 
-    private AsyncHttpClient client;
+    private final AsyncHttpClient client;
 
     public NingHttpAsyncEngine(AsyncHttpClient client) {
         this.client = client;
