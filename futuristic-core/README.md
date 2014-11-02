@@ -121,8 +121,8 @@ Future<Set<Integer>> allFuture = Futures.all(
     Futures.withValue(999)
 );
 
-//Or resolve any Future
-Future<Set<Integer>> allFuture = Futures.any(
+//Or resolve any Future, usually the first to be resolved
+Future<Integer> firstFuture = Futures.any(
     Futures.withValue(1),
     Futures.withValue(2),
     //... any number of futures
