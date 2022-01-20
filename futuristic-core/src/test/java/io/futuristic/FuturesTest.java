@@ -17,6 +17,7 @@ public class FuturesTest {
     public void testWithCallback() throws Exception {
         Future<Integer> future = Futures.withCallback(c -> c.completed(1));
         int result = future.await();
+
         assertEquals(1, result);
     }
 
